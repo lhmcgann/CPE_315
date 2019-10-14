@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class Testing {
    public static void main(String[] args) {
-      String line = "lw    $s0, 3(56)         ";
+      String line = "lw    $s0, 3  (   $a0   )         ";
       Reader r = new Reader("lab2.java");
       r.processLine(line);
       r.printInstLines();

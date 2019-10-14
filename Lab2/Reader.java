@@ -107,6 +107,10 @@ public class  Reader {
       else
          inst = line.split(WHITESPACE)[0];
 
+      // deal w/ () of lw/sw instructions
+      line = line.replace('(', ',');
+      line = line.replace(')', ' ');
+
       // put a comma btwn inst and params (for split by "," later)
       String newLine = inst + "," + line.substring(inst.length(), line.length());
 
