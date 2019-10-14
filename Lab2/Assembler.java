@@ -7,6 +7,11 @@ public class Assembler {
    private static final ArrayList<String> CMDS =
       new ArrayList<String>(Arrays.asList("and", "or", "add", "addi", "sll",
       "sub", "slt", "beq", "bne", "lw", "sw", "j", "jr", "jal"));
+   // TODO: ask abt opcodes (pg1 or pg2? which column(s)?)
+   // TODO: ask abt register numbers: just exactly the decimal num from slides?
+   private static final ArrayList<Integer> OPS =
+      new ArrayList<Integer>(Arrays.asList(0x24, 0x25, 0x20, 0x8, 0x00,
+      0x22, 0x2a, 0x4, 0x5, 0x23, 0x2b, 0x2, 0x08, 0x3));
    private static final Hashtable<String, Integer> CMD_TO_OP = new Hashtable<String, Integer>();
 
    private Hashtable<String, Integer> symbolTable;
@@ -25,6 +30,9 @@ public class Assembler {
     * @param lineNum - the line number the open label refers to
     */
    public void addSymbol(int lineNum) {
+      if (lab2.DEBUG) {
+         System.out.println("Label '" + openLabel + "' closed with lineNum = " + lineNum);
+      }
       symbolTable.put(openLabel, lineNum);
       openLabel = null; // "close"
    }
@@ -57,8 +65,8 @@ public class Assembler {
    }
 
    /**
-   * Convert a line of assembly code into binary and output the binary to an
-   *  an output file.
+   * Convert a line of assembly code into binary and output the binary to the
+   *  screen.
    * If an invalid command is given, exit after printing an error message.
    * @param elements - an array of all the terms/items in the line of assembly
    *  code to translate; may include trailing in-line comments
@@ -71,6 +79,13 @@ public class Assembler {
       else {
          System.out.println("The cmd " + elements[0] + " is unsupported.");
          System.exit(1);
+      }
+   }
+
+   public void printSymbolTable() {
+      System.out.println("SYMBOL TABLE");
+      for (String label : symbolTable.keySet()) {
+         System.out.println(label + " : " + symbolTable.get(label));
       }
    }
 

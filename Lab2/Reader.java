@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 public class  Reader {
 
    private Scanner s;
-   private Assembler a;
+   public Assembler a;
    private int lineCount; // only counts lines of actual code; the COUNT not NUM
    private boolean eof;
    private boolean firstPass;
@@ -70,6 +70,9 @@ public class  Reader {
             int len = elements[0].length();
             // mark "open" label
             a.openLabel(elements[0].substring(0, len - 1));
+            if (lab2.DEBUG) {
+               System.out.println("Label '" + elements[0].substring(0, len - 1) + "' opened. LineCnt = " + lineCount);
+            }
             // recursive call with substring of line (i.e. process after label)
             processLine(line.substring(len));
          }
@@ -81,6 +84,9 @@ public class  Reader {
                a.addSymbol(lineCount);
             // inc lineCount after adding to symbol tbl so add lineNUM not CNT
             lineCount++;
+            if (lab2.DEBUG) {
+               System.out.println("New lineCount = " + lineCount);
+            }
          }
          // else, translate cmd to binary
          else

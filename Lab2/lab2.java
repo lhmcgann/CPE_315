@@ -1,4 +1,8 @@
+import java.util.Arrays;
+
 public class lab2 {
+
+   public static boolean DEBUG = false;
 
    public static void main(String[] args) {
 
@@ -8,16 +12,16 @@ public class lab2 {
          System.exit(1);
       }
 
-      // get filename from args[1] (args[0] is this program itself)
-      Reader r = new Reader(args[1]);
-      // FUNCTION: passThrough(file, actionFunction)
-      // axnFnxn1: findLabel(line)
-      // axnFnxn2: processCmd(line)
+      // get filename from args[0] (I tested and it is args[0] not args[1])
+      Reader r = new Reader(args[0]);
+      r.iterateThroughLines(); // first pass to build symbol table
+      r.a.printSymbolTable();
+      // r.iterateThroughLines(); // second pass to translate code
       r.terminate();
    }
 
    public static boolean validArgs(String[] args) {
       return args.length == 1;
    }
-   
+
 }
