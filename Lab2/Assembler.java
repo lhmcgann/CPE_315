@@ -1,4 +1,5 @@
 import java.util.Hashtable;
+import java.util.ArrayList;
 
 public class Assembler {
 
@@ -7,13 +8,9 @@ public class Assembler {
    public static final Hashtable<String, Integer> CMD_TO_OP = ;
 
    private Hastable<String, Integer> symbolTable;
-   private boolean firstPass;
-   private Reader r;
 
    public Assembler(File file) {
       symbolTable = new Hashtable<String, Integer>;
-      r = new Reader(file);
-      firstPass = true;
    }
 
    /**

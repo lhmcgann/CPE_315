@@ -5,37 +5,14 @@ import java.util.NoSuchElementException;
 import java.util.Arrays;
 
 public class Testing {
-   public static void main(String[] args) throws FileNotFoundException {
-
-      // get filename from args[1] (args[0] is this program itself)
-      File file = new File(args[0]);
-      Scanner s = new Scanner(file);
-      String line = s.nextLine();
-      System.out.println("Length of line: " + line.length());
-      System.out.println("Line: " + line);
+   public static void main(String[] args) {
+      String line = "label: cmd      $30, blah       , hi   #   comment me!!!";
       line = line.trim();
-      System.out.println("Length of trimmed line: " + line.length());
-      System.out.println("Trimmed Line: " + line);
       String[] elements = line.split("\\s+");
-      System.out.println("Num elements: " + elements.length);
+      int len = elements[0].length();
       System.out.println("Elements: " + Arrays.toString(elements));
-      try {
-         line = s.nextLine();
-         System.out.println("Not EOF yet!\n");
-      }
-      catch (NoSuchElementException e) {
-         line = "";
-         System.out.println("EOF found!\n");
-      }
-      System.out.println("Length of line: " + line.length());
-      System.out.println("Line: " + line);
-      line = line.trim();
-      System.out.println("Length of trimmed line: " + line.length());
-      System.out.println("Trimmed Line: " + line);
-      elements = line.split("\\s+");
-      System.out.println("Num elements: " + elements.length);
-      System.out.println("Elements: " + Arrays.toString(elements));
-      s.close();
+      System.out.println("E[0].sub(0, len-1): " + elements[0].substring(0, len - 1));
+      System.out.println("line.sub(len):" + line.substring(len));
    }
 }
 
@@ -48,3 +25,6 @@ public class Testing {
 //    for leading whitespace: use trim before split to remove "" from resulting array
 //    just a new line: split returns array of length 1 w/ element ""
 //    for whitespace lines, trim (line length now = 0) then split("\\s+") -> [""] bc only newline char (see prev note)
+
+//    my substringing with the labels works
+//    TODO: if code, replace all ',' with whitepsace before splitting

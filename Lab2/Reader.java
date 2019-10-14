@@ -1,6 +1,7 @@
 public class  Reader {
 
    private Scanner s;
+   private Assembler a;
    private int lineCount; // only counts lines of actual code; the COUNT not NUM
    private boolean eof;
    private boolean firstPass;
