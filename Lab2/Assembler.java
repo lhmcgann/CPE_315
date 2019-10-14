@@ -1,6 +1,11 @@
 import java.util.Hashtable;
 
 public class Assembler {
+
+   private static final ArrayList<String> CMDS = {"and", "or", "add", "addi",
+      "sll", "sub", "slt", "beq", "bne", "lw", "sw", "j", "jr", "jal"};
+   public static final Hashtable<String, Integer> CMD_TO_OP = ;
+
    private Hastable<String, Integer> symbolTable;
    private boolean firstPass;
    private Reader r;
