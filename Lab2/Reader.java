@@ -9,7 +9,6 @@ public class  Reader {
    public Assembler a;
    private int lineCount; // only counts lines of actual code; the COUNT not NUM
    private boolean eof;
-   private boolean firstPass;
    private static final String WHITESPACE = "\\s+";
 
    public Reader(String filename) {
@@ -23,7 +22,6 @@ public class  Reader {
       a = new Assembler();
       lineCount = 0;
       eof = false;
-      firstPass = true;
    }
 
    public int getLineCnt() {
@@ -45,43 +43,40 @@ public class  Reader {
       return result;
    }
 
-   public void iterateThroughLines() {
+   public void firstPass() {
       String line;
       // read all lines in the file
       do {
          line = readNextLine();
-         line = line.trim(); // remove leading and trailing whitespace
          // process this line, whatever it may be
          processLine(line);
       } while (!eof);
-      // by now, file has been read at least once, so not the first pass
-      firstPass = false;
    }
 
+   /**
+   * For first pass only.
+   */
    public void processLine(String line) {
       // remove comments from the line
       int commentI;
       if ((commentI = line.indexOf('#')) != -1)
          line = line.substring(0, commentI);
-
+      line = line.trim(); // remove leading and trailing whitespace
+      
       // if (now) empty or eof (i.e. line.length() == 0), do nothing
       if (!isEmptyLine(line)) {
-         // TODO: DON'T split like this bc whitespace NOT guaranteed!!!
-         // remove commas so split elements are terms only
-         // line = line.replace(",", " ");
-         // String[] elements = line.split(WHITESPACE);
+         // TODO: DON'T split like this bc whitespace NOT guaranteed!!! --> split properly
 
-         // if label (i.e. first element has ':') and firstPass (so we care)
+         // if label (i.e. first element has ':')
          int labelEnd;
-         if ((labelEnd = getLabelEnd(line)) != -1 && firstPass) {
+         if ((labelEnd = getLabelEnd(line)) != -1) {
             // mark "open" label
             a.openLabel(line.substring(0, labelEnd));
             // recursive call with substring of line (i.e. process after label)
             processLine(line.substring(labelEnd + 1));
          }
          // if get here, line must be code, so following options assume code
-         // if firstPass, incr lineCount
-         else if (firstPass) {
+         else {
             // add this line to instMem
             a.addInst(line);
             // if "open" label, add this lineNum to table w/ "open" label
@@ -90,9 +85,6 @@ public class  Reader {
             // inc lineCount after adding to symbol tbl so add lineNUM not CNT
             lineCount++;
          }
-         // else, translate cmd to binary
-         // else
-         //    a.translate(elements);
       }
    }
 

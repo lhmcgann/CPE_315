@@ -127,24 +127,28 @@ public class Assembler {
    }
 
    /**
-   * Convert a line of assembly code into binary and output the binary to the
-   *  screen.
-   * If an invalid command is given, exit after printing an error message.
-   * @param elements - an array of all the terms/items in the line of assembly
-   *  code to translate; may include trailing in-line comments
+   * Translate this Assembler's instMem to binary.
    */
-   public void translate(String[] elements) {
-      String str = elements[0];
-      if (isSupportedCmd(str)) {
-         // TODO: translating things here
-         Cmd cmd = STR_TO_CMD.get(str);
-
+   public void translate() {
+      for (String line : instMem) {
+         // parse instrxn itself (check validity)
+         Cmd cmd = identifyInst(line);
+         // split rest into args
+         // assign args
+         // convert args to binary
       }
+   }
+
+   public Cmd identifyInst(String line) {
+      String str = "";
+      if (isSupportedCmd(str))
+         return STR_TO_CMD.get(str);
       // else unsupported cmd error
       else {
          System.out.println("invalid instruction: " + str);
          System.exit(1);
       }
+      return null;
    }
 
    public void printSymbolTable() {
