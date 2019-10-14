@@ -62,7 +62,7 @@ public class  Reader {
       if ((commentI = line.indexOf('#')) != -1)
          line = line.substring(0, commentI);
       line = line.trim(); // remove leading and trailing whitespace
-      
+
       // if (now) empty or eof (i.e. line.length() == 0), do nothing
       if (!isEmptyLine(line)) {
          // TODO: DON'T split like this bc whitespace NOT guaranteed!!! --> split properly
@@ -78,7 +78,7 @@ public class  Reader {
          // if get here, line must be code, so following options assume code
          else {
             // add this line to instMem
-            a.addInst(line);
+            a.addInst(prepareInstLine(line));
             // if "open" label, add this lineNum to table w/ "open" label
             if (a.isOpenLabel())
                a.addSymbol(lineCount);
@@ -86,6 +86,35 @@ public class  Reader {
             lineCount++;
          }
       }
+   }
+
+   /**
+   * Identifies the instruction string.
+   * Spaces the instruction itself and all of its aguments by nothing more than a ','
+   * Included here in order to have all String manipulation in this class.
+   * @param line - the initial instruction line; first char is first char of
+   *  the instruction; no comments after the assembly code
+   * @return - a String array of the inst itself followed by its arguments
+   */
+   private String[] prepareInstLine(String line) {
+      String inst;
+      int endRange;
+      // only 2 cases: (1) 1st arg is a register (look for $)
+      if ((endRange = line.indexOf('$')) != -1)
+         inst = line.substring(0, endRange).trim(); // trim WS btwn inst and $
+      // or (2) 1st arg label (for j and jal only --> look for whitespace)
+      else
+         inst = line.split(WHITESPACE)[0];
+
+      // put a comma btwn inst and params (for split by "," later)
+      String newLine = inst + "," + line.substring(inst.length(), line.length());
+
+      String[] args = newLine.split(",");
+      // trim any whitespace off indv args
+      for (int i = 0; i < args.length; i++)
+         args[i] = args[i].trim();
+
+      return args;
    }
 
    private boolean isEmptyLine(String line) {

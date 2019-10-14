@@ -63,12 +63,12 @@ public class Assembler {
       }};
 
    private HashMap<String, Integer> symbolTable;
-   private ArrayList<String> instMem;
+   private ArrayList<String[]> instMem;
    private String openLabel;
 
    public Assembler() {
       symbolTable = new HashMap<String, Integer>();
-      instMem = new ArrayList<String>();
+      instMem = new ArrayList<String[]>();
       openLabel = null;
       // initialize STR_TO_CMD as a HashMap from cmd name to a cmd object
       for (int i = 0; i < NAMES.size(); i++)
@@ -122,35 +122,43 @@ public class Assembler {
    * Adding is sequential and only code lines are added, so the index is the
    *  line number.
    */
-   public void addInst(String line) {
+   public void addInst(String[] line) {
       instMem.add(line);
    }
 
    /**
    * Translate this Assembler's instMem to binary.
+   * Output the translation of each instruction to the screen.
    */
    public void translate() {
-      for (String line : instMem) {
-         // parse instrxn itself (check validity)
-         Cmd cmd = identifyInst(line);
-         // split rest into args
+      for (String[] line : instMem) {
+         // get full Cmd (check instrxn validity)
+         Cmd cmd = identifyInst(line[0]);
          // assign args
          // convert args to binary
       }
    }
 
-   public Cmd identifyInst(String line) {
-      String str = "";
-      if (isSupportedCmd(str))
-         return STR_TO_CMD.get(str);
-      // else unsupported cmd error
+   /**
+   * Map the instruction to its full Cmd object if it's a valid instruction.
+   * If invalid, print error message and exit.
+   * @param inst - the instruction
+   * @return - the corresponding Cmd object, null if invalid
+   */
+   public Cmd identifyInst(String inst) {
+      // check inst validity
+      if (isSupportedCmd(inst))
+         return STR_TO_CMD.get(inst);
       else {
-         System.out.println("invalid instruction: " + str);
+         System.out.println("invalid instruction: " + inst);
          System.exit(1);
       }
       return null;
    }
 
+   /**
+   * Print the symbol table. - USED FOR TESTING
+   */
    public void printSymbolTable() {
       System.out.println("SYMBOL TABLE");
       for (String label : symbolTable.keySet()) {
@@ -158,10 +166,13 @@ public class Assembler {
       }
    }
 
+   /**
+   * Print the instruction memory. - USED FOR TESTING
+   */
    public void printInstMem() {
       System.out.println("INST MEM");
       for (int i = 0; i < instMem.size(); i++) {
-         System.out.println(i + "  " + instMem.get(i));
+         System.out.println(i + "  " + Arrays.toString(instMem.get(i)));
       }
    }
 
