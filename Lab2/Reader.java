@@ -2,11 +2,12 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.NoSuchElementException;
+import java.util.Arrays;
 
 public class  Reader {
 
    private Scanner s;
-   public Assembler a;
+   private Assembler a;
    private int lineCount; // only counts lines of actual code; the COUNT not NUM
    private boolean eof;
    private static final String WHITESPACE = "\\s+";
@@ -133,5 +134,25 @@ public class  Reader {
    */
    public void terminate() {
       s.close();
+   }
+
+   /**
+   * Print the symbol table. - USED FOR TESTING
+   */
+   public void printLabels() {
+      System.out.println("SYMBOL TABLE");
+      for (String label : a.getSymbolTable().keySet()) {
+         System.out.println(label + " : " + a.getSymbolTable().get(label));
+      }
+   }
+
+   /**
+   * Print the instruction memory. - USED FOR TESTING
+   */
+   public void printInstLines() {
+      System.out.println("INST MEM");
+      for (int i = 0; i < a.getInstMem().size(); i++) {
+         System.out.println(i + "  " + Arrays.toString(a.getInstMem().get(i)));
+      }
    }
 }

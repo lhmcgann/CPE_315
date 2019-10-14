@@ -6,13 +6,10 @@ import java.util.Arrays;
 
 public class Testing {
    public static void main(String[] args) {
-      String line = "label: cmd      $30, blah       , hi   #   comment me!!!";
-      line = line.trim();
-      String[] elements = line.split("\\s+");
-      int len = elements[0].length();
-      System.out.println("Elements: " + Arrays.toString(elements));
-      System.out.println("E[0].sub(0, len-1): " + elements[0].substring(0, len - 1));
-      System.out.println("line.sub(len):" + line.substring(len));
+      String line = "lw    $s0, 3(56)         ";
+      Reader r = new Reader("lab2.java");
+      r.processLine(line);
+      r.printInstLines();
    }
 }
 

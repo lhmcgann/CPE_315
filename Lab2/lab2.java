@@ -15,9 +15,9 @@ public class lab2 {
       // get filename from args[0] (I tested and it is args[0] not args[1])
       Reader r = new Reader(args[0]);
       r.firstPass(); // first pass to build symbol table
-      r.a.printSymbolTable();
+      r.printLabels();
       System.out.println("\n");
-      r.a.printInstMem();
+      r.printInstLines();
       // r.iterateThroughLines(); // second pass to translate code
       r.terminate();
    }

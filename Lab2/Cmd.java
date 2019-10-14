@@ -13,6 +13,7 @@ public class Cmd {
    private int rd;
    private int shamt;
    private int funct;
+   private int immediate;
    private Format format;
 
    /**
@@ -29,7 +30,7 @@ public class Cmd {
          op = code;
          funct = -1;
       }
-      rt = rs = rd = shamt = -1;
+      rt = rs = rd = shamt = immediate = -1;
       format = f;
    }
 
@@ -76,6 +77,14 @@ public class Cmd {
 
    public void setShamt(int newShamt) {
       shamt = newShamt;
+   }
+
+   public int getImdt() {
+      return immediate;
+   }
+
+   public void setImdt(int newImdt) {
+      immediate = newImdt;
    }
 
    public Format getFormat() {

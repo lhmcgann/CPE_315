@@ -134,8 +134,10 @@ public class Assembler {
       for (String[] line : instMem) {
          // get full Cmd (check instrxn validity)
          Cmd cmd = identifyInst(line[0]);
-         // assign args
-         // convert args to binary
+         // assign textual args to correct rs/rt/rd, etc
+         // get full binary representation of inst
+            // calc label offset if needed
+         // output binary
       }
    }
 
@@ -156,24 +158,12 @@ public class Assembler {
       return null;
    }
 
-   /**
-   * Print the symbol table. - USED FOR TESTING
-   */
-   public void printSymbolTable() {
-      System.out.println("SYMBOL TABLE");
-      for (String label : symbolTable.keySet()) {
-         System.out.println(label + " : " + symbolTable.get(label));
-      }
+   public HashMap<String, Integer> getSymbolTable() {
+      return symbolTable;
    }
 
-   /**
-   * Print the instruction memory. - USED FOR TESTING
-   */
-   public void printInstMem() {
-      System.out.println("INST MEM");
-      for (int i = 0; i < instMem.size(); i++) {
-         System.out.println(i + "  " + Arrays.toString(instMem.get(i)));
-      }
+   public ArrayList<String[]> getInstMem() {
+      return instMem;
    }
 
 }
