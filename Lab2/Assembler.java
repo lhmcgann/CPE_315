@@ -63,10 +63,12 @@ public class Assembler {
       }};
 
    private HashMap<String, Integer> symbolTable;
+   private HashMap<Integer, String> instMem;
    private String openLabel;
 
    public Assembler() {
       symbolTable = new HashMap<String, Integer>();
+      instMem = new HashMap<Integer, String>();
       openLabel = null;
       // initialize STR_TO_CMD as a HashMap from cmd name to a cmd object
       for (int i = 0; i < NAMES.size(); i++)

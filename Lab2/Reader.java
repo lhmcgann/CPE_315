@@ -59,20 +59,23 @@ public class  Reader {
    }
 
    public void processLine(String line) {
-      // if empty or eof (i.e. line.length() == 0), do nothing
-      // if comment (i.e. first element starts with #), do nothing
-      if (!isEmptyLine(line) && !isComment(line)) {
+      // remove comments from the line
+      int commentI;
+      if ((commentI = line.indexOf('#')) != -1)
+         line = line.substring(0, commentI);
+
+      // if (now) empty or eof (i.e. line.length() == 0), do nothing
+      if (!isEmptyLine(line)) {
+         // TODO: DON'T split like this bc whitespace NOT guaranteed!!!
          // remove commas so split elements are terms only
          line = line.replace(",", " ");
          String[] elements = line.split(WHITESPACE);
+
          // if label (i.e. first element has ':') and firstPass (so we care)
          if (isLabel(elements) && firstPass) {
             int len = elements[0].length();
             // mark "open" label
             a.openLabel(elements[0].substring(0, len - 1));
-            if (lab2.DEBUG) {
-               System.out.println("Label '" + elements[0].substring(0, len - 1) + "' opened. LineCnt = " + lineCount);
-            }
             // recursive call with substring of line (i.e. process after label)
             processLine(line.substring(len));
          }
@@ -96,10 +99,6 @@ public class  Reader {
 
    private boolean isEmptyLine(String line) {
       return line.length() == 0;
-   }
-
-   private boolean isComment(String line) {
-      return line.charAt(0) == '#';
    }
 
    private boolean isLabel(String[] elements) {
