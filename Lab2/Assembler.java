@@ -131,7 +131,7 @@ public class Assembler {
       }
       // else unsupported cmd error
       else {
-         System.out.println("The cmd " + elements[0] + " is unsupported.");
+         System.out.println("invalid instruction: " + str);
          System.exit(1);
       }
    }
