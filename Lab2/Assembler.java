@@ -1,25 +1,76 @@
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Assembler {
 
-   private static final ArrayList<String> CMDS =
+   private static final ArrayList<String> NAMES =
       new ArrayList<String>(Arrays.asList("and", "or", "add", "addi", "sll",
       "sub", "slt", "beq", "bne", "lw", "sw", "j", "jr", "jal"));
    // TODO: ask abt opcodes (pg1 or pg2? which column(s)?)
    // TODO: ask abt register numbers: just exactly the decimal num from slides?
-   private static final ArrayList<Integer> OPS =
+   private static final ArrayList<Integer> CODES =
       new ArrayList<Integer>(Arrays.asList(0x24, 0x25, 0x20, 0x8, 0x00,
       0x22, 0x2a, 0x4, 0x5, 0x23, 0x2b, 0x2, 0x08, 0x3));
-   private static final Hashtable<String, Integer> CMD_TO_OP = new Hashtable<String, Integer>();
+   private static final ArrayList<Cmd> CMDS = new ArrayList<Cmd>() {
+      add(new Cmd("and", 0x24, Format.R));
+      add(new Cmd("or", 0x25, Format.R));
+      add(new Cmd("add", 0x20, Format.R));
+      add(new Cmd("addi", 0x8, Format.I));
+      add(new Cmd("sll", 0x00, Format.R));
+      add(new Cmd("sub", 0x22, Format.R));
+      add(new Cmd("slt", 0x2a, Format.R));
+      add(new Cmd("beq", 0x4, Format.I));
+      add(new Cmd("bne", 0x5, Format.I));
+      add(new Cmd("lw", 0x23, Format.I));
+      add(new Cmd("sw", 0x2b, Format.I));
+      add(new Cmd("j", 0x2, Format.J));
+      add(new Cmd("jr", 0x08, Format.R));
+      add(new Cmd("jal", 0x3, Format.J));
+   };
+   private static final HashMap<String, Integer> STR_TO_CMD = new HashMap<String, Cmd>();
 
-   private Hashtable<String, Integer> symbolTable;
+   private static final HashMap<String, Integer> REGS = new HashMap<String,
+      Integer>() {{
+         put("zero", 0);
+         put("0", 0);
+         put("v0", 2);
+         put("v1", 3);
+         put("a0", 4);
+         put("a1", 5);
+         put("a2", 6);
+         put("a2", 7);
+         put("t0", 8);
+         put("t1", 9);
+         put("t2", 10);
+         put("t3", 11);
+         put("t4", 12);
+         put("t5", 13);
+         put("t6", 14);
+         put("t7", 15);
+         put("s0", 16);
+         put("s1", 17);
+         put("s2", 18);
+         put("s3", 19);
+         put("s4", 20);
+         put("s5", 21);
+         put("s6", 22);
+         put("s7", 23);
+         put("t8", 24);
+         put("t9", 25);
+         put("sp", 29);
+         put("ra", 31);
+      }};
+
+   private HashMap<String, Integer> symbolTable;
    private String openLabel;
 
    public Assembler() {
-      symbolTable = new Hashtable<String, Integer>();
+      symbolTable = new HashMap<String, Integer>();
       openLabel = null;
+      // initialize STR_TO_CMD as a HashMap from cmd name to a cmd object
+      for (int i = 0; i < NAMES.size(); i++)
+         STR_TO_CMD.put(NAMES.get(i), CMDS.get(i));
    }
 
    /**
@@ -61,7 +112,7 @@ public class Assembler {
    * @return - true if the command is supported, false if not
    */
    private boolean isSupportedCmd(String cmd) {
-      return CMD_TO_OP.containsKey(cmd);
+      return STR_TO_CMD.containsKey(cmd);
    }
 
    /**
@@ -72,9 +123,12 @@ public class Assembler {
    *  code to translate; may include trailing in-line comments
    */
    public void translate(String[] elements) {
-      if (isSupportedCmd(elements[0]))
+      String str = elements[0];
+      if (isSupportedCmd(cmd)) {
          // TODO: translating things here
-         System.out.println("TODO: translate to binary; make data struct/class");
+         Cmd cmd = STR_TO_CMD.get(str);
+
+      }
       // else unsupported cmd error
       else {
          System.out.println("The cmd " + elements[0] + " is unsupported.");
