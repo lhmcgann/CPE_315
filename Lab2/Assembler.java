@@ -63,12 +63,12 @@ public class Assembler {
       }};
 
    private HashMap<String, Integer> symbolTable;
-   private HashMap<Integer, String> instMem;
+   private ArrayList<String> instMem;
    private String openLabel;
 
    public Assembler() {
       symbolTable = new HashMap<String, Integer>();
-      instMem = new HashMap<Integer, String>();
+      instMem = new ArrayList<String>();
       openLabel = null;
       // initialize STR_TO_CMD as a HashMap from cmd name to a cmd object
       for (int i = 0; i < NAMES.size(); i++)
@@ -118,6 +118,15 @@ public class Assembler {
    }
 
    /**
+   * Adds an instruction to the stored instruction memory at the given lineNum
+   * Adding is sequential and only code lines are added, so the index is the
+   *  line number.
+   */
+   public void addInst(String line) {
+      instMem.add(line);
+   }
+
+   /**
    * Convert a line of assembly code into binary and output the binary to the
    *  screen.
    * If an invalid command is given, exit after printing an error message.
@@ -142,6 +151,13 @@ public class Assembler {
       System.out.println("SYMBOL TABLE");
       for (String label : symbolTable.keySet()) {
          System.out.println(label + " : " + symbolTable.get(label));
+      }
+   }
+
+   public void printInstMem() {
+      System.out.println("INST MEM");
+      for (int i = 0; i < instMem.size(); i++) {
+         System.out.println(i + "  " + instMem.get(i));
       }
    }
 

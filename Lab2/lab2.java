@@ -16,6 +16,8 @@ public class lab2 {
       Reader r = new Reader(args[0]);
       r.iterateThroughLines(); // first pass to build symbol table
       r.a.printSymbolTable();
+      System.out.println("\n");
+      r.a.printInstMem();
       // r.iterateThroughLines(); // second pass to translate code
       r.terminate();
    }

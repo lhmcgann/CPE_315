@@ -68,32 +68,31 @@ public class  Reader {
       if (!isEmptyLine(line)) {
          // TODO: DON'T split like this bc whitespace NOT guaranteed!!!
          // remove commas so split elements are terms only
-         line = line.replace(",", " ");
-         String[] elements = line.split(WHITESPACE);
+         // line = line.replace(",", " ");
+         // String[] elements = line.split(WHITESPACE);
 
          // if label (i.e. first element has ':') and firstPass (so we care)
-         if (isLabel(elements) && firstPass) {
-            int len = elements[0].length();
+         int labelEnd;
+         if ((labelEnd = getLabelEnd(line)) != -1 && firstPass) {
             // mark "open" label
-            a.openLabel(elements[0].substring(0, len - 1));
+            a.openLabel(line.substring(0, labelEnd));
             // recursive call with substring of line (i.e. process after label)
-            processLine(line.substring(len));
+            processLine(line.substring(labelEnd + 1));
          }
          // if get here, line must be code, so following options assume code
          // if firstPass, incr lineCount
          else if (firstPass) {
+            // add this line to instMem
+            a.addInst(line);
             // if "open" label, add this lineNum to table w/ "open" label
             if (a.isOpenLabel())
                a.addSymbol(lineCount);
             // inc lineCount after adding to symbol tbl so add lineNUM not CNT
             lineCount++;
-            if (lab2.DEBUG) {
-               System.out.println("New lineCount = " + lineCount);
-            }
          }
          // else, translate cmd to binary
-         else
-            a.translate(elements);
+         // else
+         //    a.translate(elements);
       }
    }
 
@@ -101,8 +100,11 @@ public class  Reader {
       return line.length() == 0;
    }
 
-   private boolean isLabel(String[] elements) {
-      return elements[0].contains(":");
+   /**
+   * @return - the end range for the label substring, -1 if no label is found
+   */
+   private int getLabelEnd(String line) {
+      return line.indexOf(":");
    }
 
    /**
