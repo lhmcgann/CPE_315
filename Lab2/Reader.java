@@ -45,7 +45,7 @@ public class  Reader {
       firstPass = false;
    }
 
-   public boolean processLine(String line) {
+   public void processLine(String line) {
       // if empty or eof (i.e. line.length() == 0), do nothing
       // if comment (i.e. first element starts with #), do nothing
       if (!isEmptyLine(line) && !isComment(line)) {
@@ -73,10 +73,9 @@ public class  Reader {
          // else unsupported cmd error
          else {
             System.out.println("The cmd " + elements[0] + " is unsupported.");
-            return false;
+            System.exit(1);
          }
       }
-      return true;
    }
 
    private boolean isEmptyLine(String line) {
