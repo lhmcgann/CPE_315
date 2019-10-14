@@ -1,74 +1,77 @@
 import java.util.Hashtable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Assembler {
 
-   private static final ArrayList<String> CMDS = {"and", "or", "add", "addi",
-      "sll", "sub", "slt", "beq", "bne", "lw", "sw", "j", "jr", "jal"};
-   public static final Hashtable<String, Integer> CMD_TO_OP = ;
+   private static final ArrayList<String> CMDS =
+      new ArrayList<String>(Arrays.asList("and", "or", "add", "addi", "sll",
+      "sub", "slt", "beq", "bne", "lw", "sw", "j", "jr", "jal"));
+   private static final Hashtable<String, Integer> CMD_TO_OP = new Hashtable<String, Integer>();
 
-   private Hastable<String, Integer> symbolTable;
+   private Hashtable<String, Integer> symbolTable;
+   private String openLabel;
 
-   public Assembler(File file) {
-      symbolTable = new Hashtable<String, Integer>;
+   public Assembler() {
+      symbolTable = new Hashtable<String, Integer>();
+      openLabel = null;
    }
 
    /**
-    * Call this function after a label has been found.
-    * Find the address of the line the label refers to.
+    * Call this function after a label has been found and the corresponding
+    *    referenced line of code has been found.
     * Add the label and corresponding address to the symbolTable.
-    * @param elements - an array of the elements in a current line
+    * "Close" the "open" label.
+    * @param lineNum - the line number the open label refers to
     */
-   public void addToSymbolTable(String[] elements) {
-      String label = elements[0];
-      label = label.substring(0, label.length() - 1); // remove the ':'
-      // if only the label on this line, find adr of line its pointing to
-      if (elements.length == 1) {
-         sca.findNextLine();
-      }
-      else
-         symbolTable.put(label, lineNumber);
+   public void addSymbol(int lineNum) {
+      symbolTable.put(openLabel, lineNum);
+      openLabel = null; // "close"
    }
 
    /**
-   * @param elements - an array of the elements in a current line
+   * @return - true if there is a label waiting for its reference lineNum to be
+   *     found, false if all labels have been matched to a lineNum and added
    */
-   public boolean lineHasLabel(String[] elements) {
-      return elements.length > 1;
-   }
-
-   public void iterateThroughLines() {
-      // iterate through all lines
-      // TODO
-      String line;
-      // loop until read EOF
-      while (!(line = r.findNextActualLine()).equals("")) {
-         parseLine(line);
-      }
-      // if went through file at least once, you know it's no longer 1st pass
-      firstPass = false;
+   public boolean isOpenLabel() {
+      return openLabel != null;
    }
 
    /**
-   * Process a single line in the file this Assembler is reading.
-   * If first pass, check for labels, else translate code into assembly.
-   * @param line - the line to parse
+   * Opens up a new label waiting for a corresponding reference lineNum to be
+   *  found.
+   * @param label - the new "open" label
    */
-   public void parseLine(String line) {
-      String[] elements = line.split("\\s+");
-      // only search for labels on the first pass
-      if (firstPass) {
-         if (lineHasLabel(elements))
-            addToSymbolTable(elements);
-      }
+   public void openLabel(String label) {
+      openLabel = label;
+   }
+
+   /**
+   * @param cmd - the assembly command to verify
+   *     the first term in the String[] elements of the current line
+   *     will never be an empty, comment, or label line
+   * @return - true if the command is supported, false if not
+   */
+   private boolean isSupportedCmd(String cmd) {
+      return CMD_TO_OP.containsKey(cmd);
+   }
+
+   /**
+   * Convert a line of assembly code into binary and output the binary to an
+   *  an output file.
+   * If an invalid command is given, exit after printing an error message.
+   * @param elements - an array of all the terms/items in the line of assembly
+   *  code to translate; may include trailing in-line comments
+   */
+   public void translate(String[] elements) {
+      if (isSupportedCmd(elements[0]))
+         // TODO: translating things here
+         System.out.println("TODO: translate to binary; make data struct/class");
+      // else unsupported cmd error
       else {
-         // TODO: translate assembly into binary; skip newlines
+         System.out.println("The cmd " + elements[0] + " is unsupported.");
+         System.exit(1);
       }
-
-   }
-
-   public void terminate() {
-      s.close();
    }
 
 }

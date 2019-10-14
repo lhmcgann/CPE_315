@@ -1,3 +1,8 @@
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.NoSuchElementException;
+
 public class  Reader {
 
    private Scanner s;
@@ -7,8 +12,15 @@ public class  Reader {
    private boolean firstPass;
    private static final String WHITESPACE = "\\s+";
 
-   public Reader(File file) {
-      s = new Scanner(file);
+   public Reader(String filename) {
+      try {
+         s = new Scanner(new File(filename));
+      }
+      catch (FileNotFoundException e) {
+         System.out.println("The file " + filename + " was not found.");
+         System.exit(1);
+      }
+      a = new Assembler();
       lineCount = 0;
       eof = false;
       firstPass = true;
@@ -25,7 +37,7 @@ public class  Reader {
    public String readNextLine() {
       String result = "";
       try {
-         result = s.newLine();
+         result = s.nextLine();
       }
       catch (NoSuchElementException e) {
          eof = true;
@@ -69,15 +81,10 @@ public class  Reader {
                a.addSymbol(lineCount);
             // inc lineCount after adding to symbol tbl so add lineNUM not CNT
             lineCount++;
-         // if supported command, translate to binary
-         else if (isSupportedCmd(elements[0]))
+         }
+         // else, translate cmd to binary
+         else
             a.translate(elements);
-         }
-         // else unsupported cmd error
-         else {
-            System.out.println("The cmd " + elements[0] + " is unsupported.");
-            System.exit(1);
-         }
       }
    }
 
@@ -94,12 +101,9 @@ public class  Reader {
    }
 
    /**
-   * @param cmd - the assembly command to verify
-   *     the first term in the String[] elements of the current line
-   *     will never be an empty, comment, or label line
-   * @return - false if command is unsupported
+   * Cleanup for this Reader: close the Scanner (and henceforth its open file).
    */
-   private boolean isSupportedCmd(String cmd) {
-      return a.CMD_TO_OP.get(cmd) != null;
+   public void terminate() {
+      s.close();
    }
 }
