@@ -33,6 +33,11 @@ public class Cmd {
       format = f;
    }
 
+   public int getBinInstruction() {
+      // TODO: join all the parts properly based on format!!!
+      return 0;
+   }
+
    public String getCmd() {
       return cmd;
    }
@@ -45,7 +50,7 @@ public class Cmd {
       return rt;
    }
 
-   public int setRt(int newRt) {
+   public void setRt(int newRt) {
       rt = newRt;
    }
 
@@ -53,7 +58,7 @@ public class Cmd {
       return rs;
    }
 
-   public int setRs(int newRs) {
+   public void setRs(int newRs) {
       rs = newRs;
    }
 
@@ -61,7 +66,7 @@ public class Cmd {
       return rd;
    }
 
-   public int setRd(int newRd) {
+   public void setRd(int newRd) {
       rd = newRd;
    }
 
@@ -69,7 +74,7 @@ public class Cmd {
       return shamt;
    }
 
-   public int setShamt(int newShamt) {
+   public void setShamt(int newShamt) {
       shamt = newShamt;
    }
 

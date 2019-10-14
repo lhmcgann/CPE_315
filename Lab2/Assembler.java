@@ -12,23 +12,23 @@ public class Assembler {
    private static final ArrayList<Integer> CODES =
       new ArrayList<Integer>(Arrays.asList(0x24, 0x25, 0x20, 0x8, 0x00,
       0x22, 0x2a, 0x4, 0x5, 0x23, 0x2b, 0x2, 0x08, 0x3));
-   private static final ArrayList<Cmd> CMDS = new ArrayList<Cmd>() {
-      add(new Cmd("and", 0x24, Format.R));
-      add(new Cmd("or", 0x25, Format.R));
-      add(new Cmd("add", 0x20, Format.R));
-      add(new Cmd("addi", 0x8, Format.I));
-      add(new Cmd("sll", 0x00, Format.R));
-      add(new Cmd("sub", 0x22, Format.R));
-      add(new Cmd("slt", 0x2a, Format.R));
-      add(new Cmd("beq", 0x4, Format.I));
-      add(new Cmd("bne", 0x5, Format.I));
-      add(new Cmd("lw", 0x23, Format.I));
-      add(new Cmd("sw", 0x2b, Format.I));
-      add(new Cmd("j", 0x2, Format.J));
-      add(new Cmd("jr", 0x08, Format.R));
-      add(new Cmd("jal", 0x3, Format.J));
-   };
-   private static final HashMap<String, Integer> STR_TO_CMD = new HashMap<String, Cmd>();
+   private static final ArrayList<Cmd> CMDS = new ArrayList<Cmd>() {{
+      add(new Cmd("and", 0x24, Cmd.Format.R));
+      add(new Cmd("or", 0x25, Cmd.Format.R));
+      add(new Cmd("add", 0x20, Cmd.Format.R));
+      add(new Cmd("addi", 0x8, Cmd.Format.I));
+      add(new Cmd("sll", 0x00, Cmd.Format.R));
+      add(new Cmd("sub", 0x22, Cmd.Format.R));
+      add(new Cmd("slt", 0x2a, Cmd.Format.R));
+      add(new Cmd("beq", 0x4, Cmd.Format.I));
+      add(new Cmd("bne", 0x5, Cmd.Format.I));
+      add(new Cmd("lw", 0x23, Cmd.Format.I));
+      add(new Cmd("sw", 0x2b, Cmd.Format.I));
+      add(new Cmd("j", 0x2, Cmd.Format.J));
+      add(new Cmd("jr", 0x08, Cmd.Format.R));
+      add(new Cmd("jal", 0x3, Cmd.Format.J));
+   }};
+   private static final HashMap<String, Cmd> STR_TO_CMD = new HashMap<String, Cmd>();
 
    private static final HashMap<String, Integer> REGS = new HashMap<String,
       Integer>() {{
@@ -124,7 +124,7 @@ public class Assembler {
    */
    public void translate(String[] elements) {
       String str = elements[0];
-      if (isSupportedCmd(cmd)) {
+      if (isSupportedCmd(str)) {
          // TODO: translating things here
          Cmd cmd = STR_TO_CMD.get(str);
 
