@@ -27,4 +27,4 @@ public class Testing {
 //    for whitespace lines, trim (line length now = 0) then split("\\s+") -> [""] bc only newline char (see prev note)
 
 //    my substringing with the labels works
-//    TODO: if code, replace all ',' with whitepsace before splitting
+//    if code, replace all ',' with whitepsace before splitting

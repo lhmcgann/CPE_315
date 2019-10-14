@@ -50,6 +50,8 @@ public class  Reader {
       // if empty or eof (i.e. line.length() == 0), do nothing
       // if comment (i.e. first element starts with #), do nothing
       if (!isEmptyLine(line) && !isComment(line)) {
+         // remove commas so split elements are terms only
+         line = line.replace(",", " ");
          String[] elements = line.split(WHITESPACE);
          // if label (i.e. first element has ':') and firstPass (so we care)
          if (isLabel(elements) && firstPass) {
