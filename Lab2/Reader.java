@@ -66,8 +66,6 @@ public class  Reader {
 
       // if (now) empty or eof (i.e. line.length() == 0), do nothing
       if (!isEmptyLine(line)) {
-         // TODO: DON'T split like this bc whitespace NOT guaranteed!!! --> split properly
-
          // if label (i.e. first element has ':')
          int labelEnd;
          if ((labelEnd = getLabelEnd(line)) != -1) {
@@ -108,11 +106,6 @@ public class  Reader {
          inst = line.split(WHITESPACE)[0];
 
       // handle lw/sw instructions
-      // int p1 = line.indexOf('(');
-      // String rs;
-      // if (p1 != -1)
-      //
-      //    rs =
       line = line.replace('(', ',');
       line = line.replace(')', ' ');
 

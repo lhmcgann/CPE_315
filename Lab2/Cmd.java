@@ -17,7 +17,6 @@ public abstract class Cmd {
       lineNum = 0;
    }
 
-
    public void processArgs(String[] line) {
       if (!validRegs(line)) {
          System.out.println("Invalid register input given for instruction " + line[INST_I]);

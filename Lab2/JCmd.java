@@ -28,7 +28,6 @@ public class JCmd extends Cmd implements NeedsLabelAdr {
    */
    protected void computeArgs(String[] line) {
       // imd is the actual adr the label pts to
-      // TODO: figure this out!!!
       imd = labelAdr;
    }
 

@@ -7,8 +7,6 @@ public class Assembler {
    private static final ArrayList<String> NAMES =
       new ArrayList<String>(Arrays.asList("and", "or", "add", "addi", "sll",
       "sub", "slt", "beq", "bne", "lw", "sw", "j", "jr", "jal"));
-   // TODO: ask abt opcodes (pg1 or pg2? which column(s)?)
-   // TODO: ask abt register numbers: just exactly the decimal num from slides?
    private static final ArrayList<Integer> CODES =
       new ArrayList<Integer>(Arrays.asList(0x24, 0x25, 0x20, 0x8, 0x00,
       0x22, 0x2a, 0x4, 0x5, 0x23, 0x2b, 0x2, 0x08, 0x3));
@@ -153,29 +151,6 @@ public class Assembler {
          System.out.println(cmd.getBinInstruction());
       }
    }
-
-   /**
-   * Base algorithm from:
-   * https://beginnersbook.com/2014/07/java-program-to-convert-decimal-to-binary/
-   * I added in bit limit stuff
-   */
-   // public void convertBinary(int num, int bitWidth){
-   //    boolean negative = num < 0;
-   //    ArrayList<Integer> binary = new ArrayList<Integer>();
-   //    // last bit added is highest bit
-   //    int index = 0;
-   //    while(num > 0){
-   //       binary.add(num%2);
-   //       num = num/2;
-   //       index++;
-   //    }
-   //    String output = "";
-   //    for(int i = index-1; i >= index-bitWidth; i--){
-   //       if (negative)
-   //          binary.set(i) = ~binary.get(i);
-   //       output += binary.get(i));
-   //    }
-   // }
 
    /**
    * Map the instruction to its full Cmd object if it's a valid instruction.

@@ -19,7 +19,6 @@ public class BCmd extends ICmd implements NeedsLabelAdr {
    @Override
    protected void calcImd(String[] line) {
       // imd is the offset calculated from lineNum and line num the label pts to
-      // TODO: figure this out!!!
       imd = labelAdr - (lineNum + 1);
    }
 
