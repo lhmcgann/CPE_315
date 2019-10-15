@@ -6,10 +6,17 @@ import java.util.Arrays;
 
 public class Testing {
    public static void main(String[] args) {
-      String line = "lw    $s0, 3  (   $a0   )         ";
-      Reader r = new Reader("lab2.java");
-      r.processLine(line);
-      r.printInstLines();
+      int val = 31; // max reg number --> 5 bits
+      System.out.println("val: " + Integer.toBinaryString(val));
+      int bitWidth = 5;
+      int mask = 0;
+      System.out.println("mask: " + Integer.toBinaryString(mask));
+      mask <<= bitWidth;
+      System.out.println("mask: " + Integer.toBinaryString(mask));
+      mask = ~mask;
+      System.out.println("mask: " + Integer.toBinaryString(mask));
+      int result = val & mask;
+      System.out.println("res: " + Integer.toBinaryString(result));
    }
 }
 

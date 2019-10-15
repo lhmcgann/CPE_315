@@ -1,42 +1,39 @@
-public class Cmd {
+public abstract class Cmd {
 
-   public enum Format {
-      R,
-      I,
-      J
-   }
+   protected final int INST_I = 0;
+   protected final int OP_SIZE = 6; // bit width
+   protected final int REG_SIZE = 5; // bit width
 
-   private String cmd;
-   private int op;
-   private int rt;
-   private int rs;
-   private int rd;
-   private int shamt;
-   private int funct;
-   private int immediate;
-   private Format format;
+   protected String cmd;
+   protected int op;
+   protected int lineNum;
 
    /**
-   * @param code - funct if R-Format instruction, otherwise the opcode
+   * A Cmd with an initially known string cmd representation and associated opcode.
    */
-   public Cmd(String cmd, int code, Format f) {
+   public Cmd(String cmd, int code) {
       this.cmd = cmd;
-      // bc funct only used for R-Format instructions, & opcode 0 if funct used
-      if (format == Format.R) {
-         funct = code;
-         op = 0;
-      }
-      else {
-         op = code;
-         funct = -1;
-      }
-      rt = rs = rd = shamt = immediate = -1;
-      format = f;
+      op = code;
+      lineNum = 0;
    }
 
-   public int getBinInstruction() {
-      // TODO: join all the parts properly based on format!!!
-      return 0;
+
+   public void processArgs(String[] line) {
+      if (!validRegs(line)) {
+         System.out.println("Invalid register input given for instruction " + line[INST_I]);
+         System.exit(1);
+      }
+      computeArgs(line);
+   }
+
+   protected abstract boolean validRegs(String[] line);
+   protected abstract void computeArgs(String[] line);
+
+   public abstract String getBinInstruction();
+
+   protected String intToBin(int val, int bitWidth) {
+      
+      return String.format("%"+bitWidth+"s", Integer.toBinaryString(val)).replace(' ', '0');
    }
 
    public String getCmd() {
@@ -47,48 +44,12 @@ public class Cmd {
       return op;
    }
 
-   public int getRt() {
-      return rt;
+   public int getLineNum() {
+      return lineNum;
    }
 
-   public void setRt(int newRt) {
-      rt = newRt;
-   }
-
-   public int getRs() {
-      return rs;
-   }
-
-   public void setRs(int newRs) {
-      rs = newRs;
-   }
-
-   public int getRd() {
-      return rd;
-   }
-
-   public void setRd(int newRd) {
-      rd = newRd;
-   }
-
-   public int getShamt() {
-      return shamt;
-   }
-
-   public void setShamt(int newShamt) {
-      shamt = newShamt;
-   }
-
-   public int getImdt() {
-      return immediate;
-   }
-
-   public void setImdt(int newImdt) {
-      immediate = newImdt;
-   }
-
-   public Format getFormat() {
-      return format;
+   public void setLineNum(int lineNum) {
+      this.lineNum = lineNum;
    }
 
 }

@@ -7,7 +7,7 @@ public class lab2 {
    public static void main(String[] args) {
 
       // make sure a file was given
-      if (!validArgs(args)) {
+      if (!validRegs(args)) {
          System.out.println("Usage: java lab2 [filename]");
          System.exit(1);
       }
@@ -15,14 +15,17 @@ public class lab2 {
       // get filename from args[0] (I tested and it is args[0] not args[1])
       Reader r = new Reader(args[0]);
       r.firstPass(); // first pass to build symbol table
-      r.printLabels();
-      System.out.println("\n");
-      r.printInstLines();
-      // r.iterateThroughLines(); // second pass to translate code
+      if (DEBUG) {
+         r.printLabels();
+         System.out.println("\n");
+         r.printInstLines();
+         System.out.println("\n");
+      }
+      r.a.translate();
       r.terminate();
    }
 
-   public static boolean validArgs(String[] args) {
+   public static boolean validRegs(String[] args) {
       return args.length == 1;
    }
 

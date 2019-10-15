@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class  Reader {
 
    private Scanner s;
-   private Assembler a;
+   public Assembler a;
    private int lineCount; // only counts lines of actual code; the COUNT not NUM
    private boolean eof;
    private static final String WHITESPACE = "\\s+";
@@ -107,7 +107,12 @@ public class  Reader {
       else
          inst = line.split(WHITESPACE)[0];
 
-      // deal w/ () of lw/sw instructions
+      // handle lw/sw instructions
+      // int p1 = line.indexOf('(');
+      // String rs;
+      // if (p1 != -1)
+      //
+      //    rs =
       line = line.replace('(', ',');
       line = line.replace(')', ' ');
 
