@@ -37,7 +37,7 @@ public class Assembler {
          put("$a0", 4);
          put("$a1", 5);
          put("$a2", 6);
-         put("$a2", 7);
+         put("$a3", 7);
          put("$t0", 8);
          put("$t1", 9);
          put("$t2", 10);
