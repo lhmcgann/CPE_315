@@ -32,8 +32,8 @@ public abstract class Cmd {
    public abstract String getBinInstruction();
 
    protected String intToBin(int val, int bitWidth) {
-      
-      return String.format("%"+bitWidth+"s", Integer.toBinaryString(val)).replace(' ', '0');
+      String bin = String.format("%"+bitWidth+"s", Integer.toBinaryString(val)).replace(' ', '0');
+      return bin.substring(bin.length() - bitWidth, bin.length());
    }
 
    public String getCmd() {

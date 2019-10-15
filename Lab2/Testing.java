@@ -6,17 +6,22 @@ import java.util.Arrays;
 
 public class Testing {
    public static void main(String[] args) {
-      int val = 31; // max reg number --> 5 bits
-      System.out.println("val: " + Integer.toBinaryString(val));
-      int bitWidth = 5;
-      int mask = 0;
-      System.out.println("mask: " + Integer.toBinaryString(mask));
-      mask <<= bitWidth;
-      System.out.println("mask: " + Integer.toBinaryString(mask));
-      mask = ~mask;
-      System.out.println("mask: " + Integer.toBinaryString(mask));
-      int result = val & mask;
-      System.out.println("res: " + Integer.toBinaryString(result));
+      int val = ~1;
+      int bitWidth = 16;
+      String bin = String.format("%"+bitWidth+"s", Integer.toBinaryString(val)).replace(' ', '0');
+      int num = Integer.parseInt(bin);
+      System.out.println("bin: " + bin + ", int: " + num + ", bin int: " + Integer.toBinaryString(num));
+
+      System.out.println(~0 + ", " + ~1);
+      System.out.println(Integer.toBinaryString(~1 & 0b11111));
+      System.out.println(Integer.toBinaryString(1 & 0b111));
+      System.out.println(Integer.toBinaryString(~(~1 & 0b111)));
+      System.out.println(Integer.toBinaryString(~0) + ", " + Integer.toBinaryString(~1));
+      System.out.println(Integer.toBinaryString(0b10101 | 0b01010));
+      System.out.println(Integer.toBinaryString(0b0101 | 0b01010));
+      System.out.println(Integer.toBinaryString(0b11101 & 0b1010));
+      System.out.println(Integer.toBinaryString(~1 & 0));
+      System.out.println(Integer.toBinaryString(~1 & 0b0));
    }
 }
 

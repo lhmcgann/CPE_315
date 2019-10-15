@@ -159,17 +159,23 @@ public class Assembler {
    * https://beginnersbook.com/2014/07/java-program-to-convert-decimal-to-binary/
    * I added in bit limit stuff
    */
-   public void convertBinary(int num, int bitWidth){
-     int binary[] = new int[40];
-     int index = 0;
-     while(num > 0){
-       binary[index++] = num%2;
-       num = num/2;
-     }
-     for(int i = index-1;i >= 0;i--){
-       System.out.print(binary[i]);
-     }
-  }
+   // public void convertBinary(int num, int bitWidth){
+   //    boolean negative = num < 0;
+   //    ArrayList<Integer> binary = new ArrayList<Integer>();
+   //    // last bit added is highest bit
+   //    int index = 0;
+   //    while(num > 0){
+   //       binary.add(num%2);
+   //       num = num/2;
+   //       index++;
+   //    }
+   //    String output = "";
+   //    for(int i = index-1; i >= index-bitWidth; i--){
+   //       if (negative)
+   //          binary.set(i) = ~binary.get(i);
+   //       output += binary.get(i));
+   //    }
+   // }
 
    /**
    * Map the instruction to its full Cmd object if it's a valid instruction.
