@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class lab2 {
+public class lab3 {
 
    public static boolean DEBUG = false;
 
@@ -14,14 +14,15 @@ public class lab2 {
 
       // get filename from args[0] (I tested and it is args[0] not args[1])
       Reader r = new Reader(args[0]);
-      r.firstPass(); // first pass to build symbol table
+      Assembler a = new Assembler();
+      r.firstPass(a); // first pass to build symbol table
       if (DEBUG) {
-         r.printLabels();
+         r.printLabels(a);
          System.out.println("\n");
-         r.printInstLines();
+         r.printInstLines(a);
          System.out.println("\n");
       }
-      r.a.translate();
+      a.translate();
       r.terminate();
    }
 

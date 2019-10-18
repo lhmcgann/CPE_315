@@ -4,10 +4,13 @@ import java.io.FileNotFoundException;
 import java.util.NoSuchElementException;
 import java.util.Arrays;
 
-public class  Reader {
+/**
+* Reads through all of the lines in a given File, processing each line - as
+*  specified by sublass - as it goes.
+*/
+public class Reader {
 
    private Scanner s;
-   public Assembler a;
    private int lineCount; // only counts lines of actual code; the COUNT not NUM
    private boolean eof;
    private static final String WHITESPACE = "\\s+";
@@ -20,7 +23,6 @@ public class  Reader {
          System.out.println("The file " + filename + " was not found.");
          System.exit(1);
       }
-      a = new Assembler();
       lineCount = 0;
       eof = false;
    }
@@ -44,20 +46,20 @@ public class  Reader {
       return result;
    }
 
-   public void firstPass() {
+   public void firstPass(Assembler a) {
       String line;
       // read all lines in the file
       do {
          line = readNextLine();
          // process this line, whatever it may be
-         processLine(line);
+         processLine(line, a);
       } while (!eof);
    }
 
    /**
    * For first pass only.
    */
-   public void processLine(String line) {
+   public void processLine(String line, Assembler a) {
       // remove comments from the line
       int commentI;
       if ((commentI = line.indexOf('#')) != -1)
@@ -72,7 +74,7 @@ public class  Reader {
             // mark "open" label
             a.openLabel(line.substring(0, labelEnd));
             // recursive call with substring of line (i.e. process after label)
-            processLine(line.substring(labelEnd + 1));
+            processLine(line.substring(labelEnd + 1), a);
          }
          // if get here, line must be code, so following options assume code
          else {
@@ -141,7 +143,7 @@ public class  Reader {
    /**
    * Print the symbol table. - USED FOR TESTING
    */
-   public void printLabels() {
+   public void printLabels(Assembler a) {
       System.out.println("SYMBOL TABLE");
       for (String label : a.getSymbolTable().keySet()) {
          System.out.println(label + " : " + a.getSymbolTable().get(label));
@@ -151,7 +153,7 @@ public class  Reader {
    /**
    * Print the instruction memory. - USED FOR TESTING
    */
-   public void printInstLines() {
+   public void printInstLines(Assembler a) {
       System.out.println("INST MEM");
       for (int i = 0; i < a.getInstMem().size(); i++) {
          System.out.println(i + "  " + Arrays.toString(a.getInstMem().get(i)));

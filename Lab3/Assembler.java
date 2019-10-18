@@ -81,7 +81,7 @@ public class Assembler {
     * @param lineNum - the line number the open label refers to
     */
    public void addSymbol(int lineNum) {
-      if (lab2.DEBUG) {
+      if (lab3.DEBUG) {
          System.out.println("Label '" + openLabel + "' closed with lineNum = " + lineNum);
       }
       symbolTable.put(openLabel, lineNum);
