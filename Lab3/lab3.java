@@ -13,21 +13,33 @@ public class lab3 {
       }
 
       // get filename from args[0] (I tested and it is args[0] not args[1])
-      Reader r = new Reader(args[0]);
+      File asmFile = openFile(args[0]);
       Assembler a = new Assembler();
-      r.firstPass(a); // first pass to build symbol table
+      AsmReader asmReader = new AsmReader(asmFile, a);
+      asmReader.firstPass(a); // first pass to build symbol table
       if (DEBUG) {
-         r.printLabels(a);
+         asmReader.printLabels();
          System.out.println("\n");
-         r.printInstLines(a);
+         asmReader.printInstLines();
          System.out.println("\n");
       }
       a.translate();
-      r.terminate();
+      asmReader.terminate();
    }
 
    public static boolean validRegs(String[] args) {
-      return args.length == 1;
+      return args.length == 1 | arg.length == 2;
+   }
+
+   public static File openFile(String filename) {
+      try {
+         return new File(filename);
+      }
+      catch (FileNotFoundException e) {
+         System.out.println("The file " + filename + " was not found.");
+         System.exit(1);
+      }
+      return null;
    }
 
 }
