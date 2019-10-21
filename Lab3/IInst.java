@@ -1,6 +1,6 @@
 import java.lang.NumberFormatException;
 
-public class ICmd extends Cmd {
+public class IInst extends Inst {
 
    protected final int IMD_SIZE = 16;
 
@@ -14,10 +14,10 @@ public class ICmd extends Cmd {
    protected int imd;
 
    /**
-   * A Cmd with an initially known string cmd representation and associated opcode.
+   * A Inst with an initially known string inst representation and associated opcode.
    */
-   public ICmd(String cmd, int code) {
-      super(cmd, code);
+   public IInst(String inst, int code) {
+      super(inst, code);
 
       rtI = 1;
       rsI = 2;
@@ -39,7 +39,7 @@ public class ICmd extends Cmd {
    }
 
    /**
-   * For normal immediate-format cmd, line[imdI] is the numeric imd itself
+   * For normal immediate-format inst, line[imdI] is the numeric imd itself
    */
    protected void calcImd(String[] line) {
       try {

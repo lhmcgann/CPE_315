@@ -10,23 +10,23 @@ public class Assembler {
    private static final ArrayList<Integer> CODES =
       new ArrayList<Integer>(Arrays.asList(0x24, 0x25, 0x20, 0x8, 0x00,
       0x22, 0x2a, 0x4, 0x5, 0x23, 0x2b, 0x2, 0x08, 0x3));
-   private static final ArrayList<Cmd> CMDS = new ArrayList<Cmd>() {{
-      add(new RCmd("and", 0x24));
-      add(new RCmd("or", 0x25));
-      add(new RCmd("add", 0x20));
-      add(new ICmd("addi", 0x8));
-      add(new ShiftCmd("sll", 0x00));
-      add(new RCmd("sub", 0x22));
-      add(new RCmd("slt", 0x2a));
-      add(new BCmd("beq", 0x4));
-      add(new BCmd("bne", 0x5));
-      add(new LSCmd("lw", 0x23));
-      add(new LSCmd("sw", 0x2b));
-      add(new JCmd("j", 0x2));
-      add(new JRCmd("jr", 0x08));
-      add(new JCmd("jal", 0x3));
+   private static final ArrayList<Inst> INSTS = new ArrayList<Inst>() {{
+      add(new AndInst("and", 0x24));
+      add(new OrInst("or", 0x25));
+      add(new AddInst("add", 0x20));
+      add(new AddiInst("addi", 0x8));
+      add(new ShiftInst("sll", 0x00));
+      add(new SubInst("sub", 0x22));
+      add(new SltInst("slt", 0x2a));
+      add(new BeqInst("beq", 0x4));
+      add(new BneInst("bne", 0x5));
+      add(new LwInst("lw", 0x23));
+      add(new SwInst("sw", 0x2b));
+      add(new JInst("j", 0x2));
+      add(new JrInst("jr", 0x08));
+      add(new JalInst("jal", 0x3));
    }};
-   private static final HashMap<String, Cmd> STR_TO_CMD = new HashMap<String, Cmd>();
+   private static final HashMap<String, Inst> STR_TO_INST = new HashMap<String, Inst>();
 
    public static final HashMap<String, Integer> REGS = new HashMap<String,
       Integer>() {{
@@ -68,9 +68,9 @@ public class Assembler {
       symbolTable = new HashMap<String, Integer>();
       instMem = new ArrayList<String[]>();
       openLabel = null;
-      // initialize STR_TO_CMD as a HashMap from cmd name to a cmd object
+      // initialize STR_TO_INST as a HashMap from inst name to a inst object
       for (int i = 0; i < NAMES.size(); i++)
-         STR_TO_CMD.put(NAMES.get(i), CMDS.get(i));
+         STR_TO_INST.put(NAMES.get(i), INSTS.get(i));
    }
 
    /**
@@ -106,13 +106,13 @@ public class Assembler {
    }
 
    /**
-   * @param cmd - the assembly command to verify
+   * @param inst - the assembly command to verify
    *     the first term in the String[] elements of the current line
    *     will never be an empty, comment, or label line
    * @return - true if the command is supported, false if not
    */
-   private boolean isSupportedCmd(String cmd) {
-      return STR_TO_CMD.containsKey(cmd);
+   private boolean isSupportedInst(String inst) {
+      return STR_TO_INST.containsKey(inst);
    }
 
    /**
@@ -131,37 +131,37 @@ public class Assembler {
    public void translate() {
       for (int i = 0; i < instMem.size(); i++) {
          String[] line = instMem.get(i);
-         // get full Cmd (check instrxn validity)
-         Cmd cmd = identifyInst(line[0]);
-         cmd.setLineNum(i);
+         // get full Inst (check instrxn validity)
+         Inst inst = identifyInst(line[0]);
+         inst.setLineNum(i);
          /**
-            if BCmd or JCmd:
+            if BInst or JInst:
                get label (last element in line, ASSUMING valid # args)
                set label-mapped-adr
          */
-         if (cmd instanceof NeedsLabelAdr) {
-            NeedsLabelAdr n = (NeedsLabelAdr) cmd;
+         if (inst instanceof NeedsLabelAdr) {
+            NeedsLabelAdr n = (NeedsLabelAdr) inst;
             n.setLabelAdr(symbolTable.get(line[line.length - 1]));
          }
          // assign textual args to correct rs/rt/rd, etc
-         cmd.processArgs(line);
+         inst.processArgs(line);
          // get full binary representation of inst
             // calc label offset if needed
          // output binary
-         System.out.println(cmd.getBinInstruction());
+         System.out.println(inst.getBinInstruction());
       }
    }
 
    /**
-   * Map the instruction to its full Cmd object if it's a valid instruction.
+   * Map the instruction to its full Inst object if it's a valid instruction.
    * If invalid, print error message and exit.
    * @param inst - the instruction
-   * @return - the corresponding Cmd object, null if invalid
+   * @return - the corresponding Inst object, null if invalid
    */
-   public Cmd identifyInst(String inst) {
+   public Inst identifyInst(String inst) {
       // check inst validity
-      if (isSupportedCmd(inst))
-         return STR_TO_CMD.get(inst);
+      if (isSupportedInst(inst))
+         return STR_TO_INST.get(inst);
       else {
          System.out.println("invalid instruction: " + inst);
          System.exit(1);

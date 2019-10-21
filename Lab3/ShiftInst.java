@@ -1,14 +1,14 @@
 import java.lang.NumberFormatException;
 
-public class ShiftCmd extends RCmd {
+public class ShiftInst extends RInst {
 
    protected int shamtI;
 
    /**
-   * A Cmd with an initially known string cmd representation and associated opcode.
+   * A Inst with an initially known string inst representation and associated opcode.
    */
-   public ShiftCmd(String cmd, int code) {
-      super(cmd, code);
+   public ShiftInst(String inst, int code) {
+      super(inst, code);
 
       // overwrite rXI values; leave rsI bc don't use anyway
       rtI = 2;

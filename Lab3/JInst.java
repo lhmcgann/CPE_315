@@ -1,4 +1,4 @@
-public class JCmd extends Cmd implements NeedsLabelAdr {
+public class JInst extends Inst implements NeedsLabelAdr {
 
    protected final int IMD_SIZE = 26; // bit width
 
@@ -8,10 +8,10 @@ public class JCmd extends Cmd implements NeedsLabelAdr {
    private int labelAdr;
 
    /**
-   * A JCmd with an initially known string cmd representation and associated opcode.
+   * A JInst with an initially known string inst representation and associated opcode.
    */
-   public JCmd(String cmd, int code) {
-      super(cmd, code);
+   public JInst(String inst, int code) {
+      super(inst, code);
       imdI = 1;
       imd = 0;
 

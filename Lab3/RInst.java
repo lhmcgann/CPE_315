@@ -1,10 +1,11 @@
-public class RCmd extends Cmd {
+public abstract class RInst extends Inst {
 
    // rXI: the index in a given String[] line where the value of rX can be found
    protected int rsI;
    protected int rtI;
    protected int rdI;
 
+   // the number representation of the desired register
    protected int rs;
    protected int rt;
    protected int rd;
@@ -12,10 +13,10 @@ public class RCmd extends Cmd {
    protected int funct;
 
    /**
-   * A Cmd with an initially known string cmd representation and associated opcode.
+   * A Inst with an initially known string inst representation and associated opcode.
    */
-   public RCmd(String cmd, int code) {
-      super(cmd, code);
+   public RInst(String inst, int code) {
+      super(inst, code);
       // bc funct only used for R-Format instructions, & opcode 0 if funct used
       funct = code;
       op = 0;

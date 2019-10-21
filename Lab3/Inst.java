@@ -1,18 +1,18 @@
-public abstract class Cmd {
+public abstract class Inst {
 
    protected final int INST_I = 0;
    protected final int OP_SIZE = 6; // bit width
    protected final int REG_SIZE = 5; // bit width
 
-   protected String cmd;
+   protected String inst;
    protected int op;
    protected int lineNum;
 
    /**
-   * A Cmd with an initially known string cmd representation and associated opcode.
+   * A Inst with an initially known string inst representation and associated opcode.
    */
-   public Cmd(String cmd, int code) {
-      this.cmd = cmd;
+   public Inst(String inst, int code) {
+      this.inst = inst;
       op = code;
       lineNum = 0;
    }
@@ -25,6 +25,8 @@ public abstract class Cmd {
       computeArgs(line);
    }
 
+   public abstract void execute(Emulator e);
+
    protected abstract boolean validRegs(String[] line);
    protected abstract void computeArgs(String[] line);
 
@@ -35,8 +37,8 @@ public abstract class Cmd {
       return bin.substring(bin.length() - bitWidth, bin.length());
    }
 
-   public String getCmd() {
-      return cmd;
+   public String getInst() {
+      return inst;
    }
 
    public int getOpcode() {

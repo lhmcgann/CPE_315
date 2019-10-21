@@ -1,9 +1,9 @@
-public class JRCmd extends RCmd {
+public class JrInst extends RInst {
    /**
-   * A Cmd with an initially known string cmd representation and associated opcode.
+   * A Inst with an initially known string inst representation and associated opcode.
    */
-   public JRCmd(String cmd, int code) {
-      super(cmd, code);
+   public JrInst(String inst, int code) {
+      super(inst, code);
 
       // overwrite rXI values; leave all others bc don't use anyway
       rsI = 1;

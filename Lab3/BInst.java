@@ -1,12 +1,12 @@
-public class BCmd extends ICmd implements NeedsLabelAdr {
+public class BInst extends IInst implements NeedsLabelAdr {
 
-   private int labelAdr;
+   protected int labelAdr;
 
    /**
-   * A Cmd with an initially known string cmd representation and associated opcode.
+   * A Inst with an initially known string inst representation and associated opcode.
    */
-   public BCmd(String cmd, int code) {
-      super(cmd, code);
+   public BInst(String inst, int code) {
+      super(inst, code);
       rtI = 2;
       rsI = 1;
 
@@ -14,7 +14,7 @@ public class BCmd extends ICmd implements NeedsLabelAdr {
    }
 
    /**
-   * For branch immediate-format cmds, line[imdI] is the label used to calc offset
+   * For branch immediate-format insts, line[imdI] is the label used to calc offset
    */
    @Override
    protected void calcImd(String[] line) {
