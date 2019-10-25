@@ -1,6 +1,6 @@
 import java.lang.NumberFormatException;
 
-public class IInst extends Inst {
+public abstract class IInst extends Inst {
 
    protected final int IMD_SIZE = 16;
 

@@ -8,7 +8,7 @@ public class SubInst extends RInst {
    }
 
    public void execute(Emulator e) {
-      e.RF.put(rd) = e.RF.get(rs) - e.RF.get(rt);
+      e.RF.put(rd, e.RF.get(rs) - e.RF.get(rt));
    }
 
 }
