@@ -7,6 +7,7 @@ public class SubInst extends RInst {
       super(inst, code);
    }
 
+   @Override
    public void execute(Emulator e) {
       e.RF.put(rd, e.RF.get(rs) - e.RF.get(rt));
    }

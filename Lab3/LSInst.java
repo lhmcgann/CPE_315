@@ -1,6 +1,4 @@
-import java.lang.NumberFormatException;
-
-public class LSInst extends IInst {
+public abstract class LSInst extends IInst {
 
    /**
    * A Inst with an initially known string inst representation and associated opcode.

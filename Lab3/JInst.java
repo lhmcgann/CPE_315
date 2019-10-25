@@ -5,7 +5,7 @@ public class JInst extends Inst implements NeedsLabelAdr {
    protected int imdI;
    protected int imd;
 
-   private int labelAdr;
+   protected int labelAdr;
 
    /**
    * A JInst with an initially known string inst representation and associated opcode.
@@ -38,6 +38,11 @@ public class JInst extends Inst implements NeedsLabelAdr {
    @Override
    public void setLabelAdr(int labelAdr) {
       this.labelAdr = labelAdr;
+   }
+
+   @Override
+   public void execute(Emulator e) {
+      e.PC = labelAdr;
    }
 
 }

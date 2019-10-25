@@ -16,7 +16,7 @@ public class Emulator {
    private final int DM_LEN = 8192;
    public int PC;
    public HashMap<Integer, Integer> RF;
-   private int[] DM;
+   public int[] DM;
    private ArrayList<Inst> IM;
 
    public Emulator() {
@@ -64,8 +64,8 @@ public class Emulator {
    * Execute the next instruction, THEN increment the PC.
    */
    private void executeInstruction() {
-      IM.get(PC).execute(this);
-      PC++;
+      PC++; // increment PC first so any cmds that modify PC aren't affected
+      IM.get(PC-1).execute(this);
    }
 
    /**

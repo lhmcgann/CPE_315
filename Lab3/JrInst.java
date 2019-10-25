@@ -20,4 +20,9 @@ public class JrInst extends RInst {
       rs = Assembler.REGS.get(line[rsI]);
    }
 
+   @Override
+   public void execute(Emulator e) {
+      e.PC = e.RF.get(rs);
+   }
+
 }
