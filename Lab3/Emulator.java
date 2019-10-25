@@ -1,10 +1,21 @@
+import java.io.File;
+import java.util.HashMap;
+import java.util.ArrayList;
+
 public class Emulator {
 
+   private final String HELP = "\nh = show help\nd = dump register state\n" +
+      "s = single step through the program (i.e. execute 1 instruction and stop)"
+      + "\ns num = step through num instructions of the program"
+      + "\nr = run until the program ends"
+      + "\nm num1 num2 = display data memory from location num1 to num2"
+      + "\nc = clear all registers, memory, and the program counter to 0"
+      + "\nq = exit the program";
    private final String CMD_PROMPT = "\nmips> ";
    private final int REGS_PER_LINE = 4;
    private final int DM_LEN = 8192;
    public int PC;
-   private HashMap<Integer, Integer> RF;
+   public HashMap<Integer, Integer> RF;
    private int[] DM;
    private ArrayList<Inst> IM;
 
@@ -53,7 +64,7 @@ public class Emulator {
    * Execute the next instruction, THEN increment the PC.
    */
    private void executeInstruction() {
-      IM[PC].execute(this);
+      IM.get(PC).execute(this);
       PC++;
    }
 
@@ -62,27 +73,35 @@ public class Emulator {
    * @param args - a 2-int long array containing any cmd arguments; filled with
    *  -1's if no cmd args
    */
-   public void executeScriptCmd(Str cmd, int[2] args) {
+   public void executeScriptCmd(String cmd, int[] args) {
       switch (cmd) {
          case "h": // show help
             h();
+            break;
          case "d": // dump reg state
             d();
+            break;
          case "s": // step through 1 or n insts
             if (args[0] == -1)
                s(1);
             else
                s(args[0]);
+            break;
          case "r": // run until prog end
             r();
+            break;
          case "m": // display data mem from n1 to n2
             m(args);
+            break;
          case "c": // clear all
             c();
+            break;
          case "q": // quit
             q();
+            break;
          default: // do nothing (just print cmd prompt again? or invalid cmd?)
             System.out.println("Invalid cmd");
+            break;
       }
 
       System.out.println(CMD_PROMPT);
@@ -92,7 +111,7 @@ public class Emulator {
    * Show help
    */
    private void h() {
-      
+      System.out.println(HELP);
    }
 
    /**
@@ -100,10 +119,10 @@ public class Emulator {
    */
    private void d() {
       System.out.println("\npc = " + PC); // print 1st buffer newline and the PC
-      Set<String> keys = Assembler.REGS.keySet();
+      Object[] keys = Assembler.REGS.keySet().toArray();
       // skip the first reg str bc it's $zero
-      for (int r = 1; r < keys.size(); r++) {
-         String reg = keys.get(r);
+      for (int r = 1; r < keys.length; r++) {
+         String reg = keys[r].toString();
          // print out each reg str and the reg's value
          System.out.print(reg + " = " + RF.get(Assembler.REGS.get(reg)));
          // to make the table appearance
@@ -115,9 +134,9 @@ public class Emulator {
    }
 
    /**
-   * @param args - the number of instructions to step through; must be valid #
+   * @param arg - the number of instructions to step through; must be valid #
    */
-   private void s(int args) {
+   private void s(int arg) {
       for (int i = 0; i < arg; i++)
          executeInstruction();
       System.out.println("\t\t" + arg + " instruction(s) executed");
@@ -161,6 +180,5 @@ public class Emulator {
    private void q() {
       System.exit(0);
    }
-
 
 }
