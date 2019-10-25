@@ -18,21 +18,6 @@ public class ScriptReader extends Reader {
    }
 
    /**
-   * Try reading the next line from this Reader's file.
-   * @return - the next line if there is one; an empty string if eof
-   */
-   public String readNextLine() {
-      String result = "";
-      try {
-         result = s.nextLine();
-      }
-      catch (NoSuchElementException e) {
-         eof = true;
-      }
-      return result;
-   }
-
-   /**
    * Executes the desired action on any given line.
    * Gathers script cmd arguments if applicable.
    * Postcondition: line counter must be incremented if "valid" line found

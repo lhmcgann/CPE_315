@@ -21,21 +21,6 @@ public class AsmReader extends Reader {
    }
 
    /**
-   * Try reading the next line from this Reader's file.
-   * @return - the next line if there is one; an empty string if eof
-   */
-   public String readNextLine() {
-      String result = "";
-      try {
-         result = s.nextLine();
-      }
-      catch (NoSuchElementException e) {
-         eof = true;
-      }
-      return result;
-   }
-
-   /**
    * Conducts first pass tasks on the given line:
    *  locates, stores, and assigns labels
    *  adds trimmed/prepped instructions to the Assembler's IM
@@ -57,7 +42,7 @@ public class AsmReader extends Reader {
             // mark "open" label
             a.openLabel(line.substring(0, labelEnd));
             // recursive call with substring of line (i.e. process after label)
-            processLine(line.substring(labelEnd + 1), a);
+            processLine(line.substring(labelEnd + 1));
          }
          // if get here, line must be code, so following options assume code
          else {

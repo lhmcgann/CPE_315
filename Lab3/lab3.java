@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 public class lab3 {
 
@@ -17,7 +18,7 @@ public class lab3 {
       File asmFile = openFile(args[0]);
       Assembler a = new Assembler();
       AsmReader asmReader = new AsmReader(asmFile, a);
-      asmReader.firstPass(a); // first pass to build symbol table
+      asmReader.readThroughLines(); // first pass to build symbol table
       if (DEBUG) {
          asmReader.printLabels();
          System.out.println("\n");
@@ -29,7 +30,7 @@ public class lab3 {
    }
 
    public static boolean validRegs(String[] args) {
-      return args.length == 1 | arg.length == 2;
+      return args.length == 1 | args.length == 2;
    }
 
    public static File openFile(String filename) {

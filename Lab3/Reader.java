@@ -56,7 +56,7 @@ public abstract class Reader {
    */
    public abstract void processLine(String line);
 
-   private boolean isEmptyLine(String line) {
+   protected boolean isEmptyLine(String line) {
       return line.length() == 0;
    }
 
