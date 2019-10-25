@@ -9,8 +9,12 @@ import java.util.Arrays;
 */
 public class ScriptReader extends Reader {
 
-   public ScriptReader(File file) {
+   private final int MAX_ARGS = 2;
+   protected Emulator e;
+
+   public ScriptReader(File file, Emulator e) {
       super(file);
+      this.e = e;
    }
 
    /**
@@ -30,11 +34,20 @@ public class ScriptReader extends Reader {
 
    /**
    * Executes the desired action on any given line.
+   * Gathers script cmd arguments if applicable.
    * Postcondition: line counter must be incremented if "valid" line found
    *  - the definition of "valid" depends on the subclass
    */
    @Override
    public void processLine(String line) {
-
+      int[] args = new int[MAX_ARGS]; // autofill with 0's
+      Arrays.fill(args, -1); // fill with -1's (so will indicate no args)
+      String[] elements = line.split(WHITESPACE);
+      // get array of int representations of any cmd args
+      for (int i = 0; i < elements.length - 1; i++)
+         args[i] = Integer.parseInt(elements[i+1]);
+      // execute the script command
+      e.executeScriptCmd(elements[0], args);
+      lineCount++;
    }
 }

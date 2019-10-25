@@ -49,23 +49,39 @@ public class Emulator {
    }
 
    /**
-   * Execute the next instruction. Increment the PC.
+   * Execute the next instruction, THEN increment the PC.
    */
    private void executeInstruction() {
       IM[PC].execute(this);
       PC++;
    }
 
-   public void executeScriptCmd(Str cmd, int[] args) {
+   /**
+   * @param cmd - the script cmd to execute
+   * @param args - a 2-int long array containing any cmd arguments; filled with
+   *  -1's if no cmd args
+   */
+   public void executeScriptCmd(Str cmd, int[2] args) {
       switch (cmd) {
          case "h": // show help
+            h();
          case "d": // dump reg state
+            d();
          case "s": // step through 1 or n insts
+            if (args[0] == -1)
+               s(1);
+            else
+               s(args[0]);
          case "r": // run until prog end
+            r();
          case "m": // display data mem from n1 to n2
+            m(args);
          case "c": // clear all
+            c();
          case "q": // quit
-         default: // do nothing (just print cmd prompt again?)
+            q();
+         default: // do nothing (just print cmd prompt again? or invalid cmd?)
+            System.out.println("Invalid cmd");
       }
 
       System.out.println(CMD_PROMPT);
@@ -79,33 +95,28 @@ public class Emulator {
    }
 
    /**
-   * Dump reg state
+   * Dump reg states
    */
    private void d() {
+      System.out.println("\npc = " + PC);
 
    }
 
    /**
-   * Step through 1 or args[0] steps
    * @param args - the number of instructions to step through; must be valid #
    */
    private void s(int args) {
-      // int instNum;
-      // // determine if 1 step or n steps
-      // if (args.length == 0)
-      //    instNum = 1;
-      // else
-      //    instNum = args[0];
-      // execute # steps
       for (int i = 0; i < arg; i++)
          executeInstruction();
+      System.out.println("    " + arg + " instruction(s) executed");
    }
 
    /**
    * Run until program end
    */
    private void r() {
-
+      while(PC < IM.size())
+         executeInstruction(); // increments PC
    }
 
    /**
