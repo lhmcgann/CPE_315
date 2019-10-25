@@ -24,12 +24,26 @@ public class lab3 {
          asmReader.printInstLines();
          System.out.println("\n");
       }
-      a.translate();
+      a.secondPass(); // store processed lines at line nums; compute labelAdrs
       asmReader.terminate();
+
+      // set up script and emulator system
+      Emulator e = new Emulator();
+      File script;
+      if (args.length == 2)
+         script = new File(args[1]);
+      else
+         script = System.in;
+      ScriptReader scriptReader = new ScriptReader(script, e);
+
+      // actually execute all the cmds in the script (or user input)
+      scriptReader.readThroughLines(); // won't end until q() exits
+
+      scriptReader.terminate();
    }
 
    public static boolean validRegs(String[] args) {
-      return args.length == 1 | args.length == 2;
+      return args.length == 1 || args.length == 2;
    }
 
 }

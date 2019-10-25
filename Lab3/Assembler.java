@@ -126,10 +126,10 @@ public class Assembler {
    }
 
    /**
-   * Translate this Assembler's instMem to binary.
-   * Output the translation of each instruction to the screen.
+   * Store the string-processed lines of asm code at correct line num.
+   * Compute all needed label offsets.
    */
-   public void translate() {
+   public void secondPass() {
       for (int i = 0; i < instMem.size(); i++) {
          String[] line = instMem.get(i);
          // get full Inst (check instrxn validity)
@@ -146,10 +146,6 @@ public class Assembler {
          }
          // assign textual args to correct rs/rt/rd, etc
          inst.processArgs(line);
-         // get full binary representation of inst
-            // calc label offset if needed
-         // output binary
-         System.out.println(inst.getBinInstruction());
       }
    }
 

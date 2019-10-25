@@ -54,6 +54,7 @@ public class Emulator {
          }};
       DM = new int[DM_LEN];
       IM = new ArrayList<Inst>();
+      System.out.print(CMD_PROMPT);
    }
 
    public void addInst(Inst inst) {
@@ -104,7 +105,7 @@ public class Emulator {
             break;
       }
 
-      System.out.println(CMD_PROMPT);
+      System.out.print(CMD_PROMPT);
    }
 
    /**
@@ -172,6 +173,8 @@ public class Emulator {
       // reset Data Mem
       for (int i = 0; i < DM_LEN; i++)
          DM[i] = 0;
+
+      System.out.println("\t\tSimulator reset");
    }
 
    /**
