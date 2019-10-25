@@ -7,12 +7,8 @@ public class BeqInst extends BInst {
       super(inst, code);
    }
 
-   public void execute(Emulator e) {
-      if (rs == rt) {
-         e.PC = labelAdr;
-      }
-      else
-         e.PC++;
+   protected boolean shouldBranch() {
+      return rs == rt;
    }
 
 }

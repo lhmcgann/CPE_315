@@ -26,6 +26,7 @@ public class Assembler {
       add(new JrInst("jr", 0x08));
       add(new JalInst("jal", 0x3));
    }};
+   // maps the string representation of any instruction to a template Inst object
    private static final HashMap<String, Inst> STR_TO_INST = new HashMap<String, Inst>();
 
    public static final HashMap<String, Integer> REGS = new HashMap<String,

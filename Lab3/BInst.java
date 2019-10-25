@@ -1,4 +1,4 @@
-public class BInst extends IInst implements NeedsLabelAdr {
+public abstract class BInst extends IInst implements NeedsLabelAdr {
 
    protected int labelAdr;
 
@@ -12,6 +12,17 @@ public class BInst extends IInst implements NeedsLabelAdr {
 
       labelAdr = -1;
    }
+
+   @Override
+   public void execute(Emulator e) {
+      if (shouldBranch())
+         e.PC = labelAdr - 1; // the -1 is bc PC will be incremented elsewhere
+   }
+
+   /**
+   * @return - evaluation of the branch condition
+   */
+   protected abstract boolean shouldBranch();
 
    /**
    * For branch immediate-format insts, line[imdI] is the label used to calc offset
