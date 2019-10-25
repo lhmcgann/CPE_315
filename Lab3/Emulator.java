@@ -1,6 +1,7 @@
 public class Emulator {
 
    private final String CMD_PROMPT = "\nmips> ";
+   private final int REGS_PER_LINE = 4;
    private final int DM_LEN = 8192;
    public int PC;
    private HashMap<Integer, Integer> RF;
@@ -91,15 +92,26 @@ public class Emulator {
    * Show help
    */
    private void h() {
-
+      
    }
 
    /**
    * Dump reg states
    */
    private void d() {
-      System.out.println("\npc = " + PC);
-
+      System.out.println("\npc = " + PC); // print 1st buffer newline and the PC
+      Set<String> keys = Assembler.REGS.keySet();
+      // skip the first reg str bc it's $zero
+      for (int r = 1; r < keys.size(); r++) {
+         String reg = keys.get(r);
+         // print out each reg str and the reg's value
+         System.out.print(reg + " = " + RF.get(Assembler.REGS.get(reg)));
+         // to make the table appearance
+         if (r%REGS_PER_LINE == 0)
+            System.out.println();
+         else
+            System.out.print("\t\t");
+      }
    }
 
    /**
@@ -108,7 +120,7 @@ public class Emulator {
    private void s(int args) {
       for (int i = 0; i < arg; i++)
          executeInstruction();
-      System.out.println("    " + arg + " instruction(s) executed");
+      System.out.println("\t\t" + arg + " instruction(s) executed");
    }
 
    /**
