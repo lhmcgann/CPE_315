@@ -45,7 +45,7 @@ public class AsmReader extends Reader {
          // if get here, line must be code, so following options assume code
          else {
             // add this line to instMem
-            a.addInst(prepareInstLine(line));
+            a.addInstLine(prepareInstLine(line));
             // if "open" label, add this lineNum to table w/ "open" label
             if (a.isOpenLabel())
                a.addSymbol(lineCount);

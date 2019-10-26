@@ -54,7 +54,10 @@ public class Emulator {
          }};
       DM = new int[DM_LEN];
       IM = new ArrayList<Inst>();
-      System.out.print(CMD_PROMPT);
+
+      // TODO: fix this! when to print this? edit actual execute fnxn so don't
+      //    need special thing here; this will also run b4 a.secondPass(e);
+      System.out.print("mips> ");
    }
 
    public void addInst(Inst inst) {
@@ -118,6 +121,7 @@ public class Emulator {
    /**
    * Dump reg states
    */
+   // TODO: fix how this looks! regs in wrong order, spacing too small, $zero
    private void d() {
       System.out.println("\npc = " + PC); // print 1st buffer newline and the PC
       Object[] keys = Assembler.REGS.keySet().toArray();
