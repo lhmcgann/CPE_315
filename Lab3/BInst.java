@@ -15,14 +15,14 @@ public abstract class BInst extends IInst implements NeedsLabelAdr {
 
    @Override
    public void execute(Emulator e) {
-      if (shouldBranch())
+      if (shouldBranch(e))
          e.PC = labelAdr;
    }
 
    /**
    * @return - evaluation of the branch condition
    */
-   protected abstract boolean shouldBranch();
+   protected abstract boolean shouldBranch(Emulator e);
 
    /**
    * For branch immediate-format insts, line[imdI] is the label used to calc offset

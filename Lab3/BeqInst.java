@@ -7,8 +7,8 @@ public class BeqInst extends BInst {
       super(inst, code);
    }
 
-   protected boolean shouldBranch() {
-      return rs == rt;
+   protected boolean shouldBranch(Emulator e) {
+      return e.RF.get(rs) != e.RF.get(rt);
    }
 
 }
