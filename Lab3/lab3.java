@@ -29,11 +29,16 @@ public class lab3 {
 
       // set up script reader: script file if given, else user input
       InputStream script;
-      if (args.length == 2)
+      boolean isScript;
+      if (args.length == 2) {
          script = openStream(args[1]);
-      else
+         isScript = true;
+      }
+      else {
          script = System.in;
-      ScriptReader scriptReader = new ScriptReader(script, e);
+         isScript = false;
+      }
+      ScriptReader scriptReader = new ScriptReader(script, e, isScript);
 
       // actually execute all the cmds in the script (or user input)
       scriptReader.readThroughLines(); // won't end until q() exits

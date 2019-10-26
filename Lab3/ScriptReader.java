@@ -9,10 +9,12 @@ public class ScriptReader extends Reader {
 
    private final int MAX_ARGS = 2;
    protected Emulator e;
+   private boolean isScript;
 
-   public ScriptReader(InputStream in, Emulator e) {
+   public ScriptReader(InputStream in, Emulator e, boolean isScript) {
       super(in);
       this.e = e;
+      this.isScript = isScript;
    }
 
    /**
@@ -29,6 +31,11 @@ public class ScriptReader extends Reader {
       // get array of int representations of any cmd args
       for (int i = 0; i < elements.length - 1; i++)
          args[i] = Integer.parseInt(elements[i+1]);
+
+      // if it's ACTUALLY a script, print out the "user input"
+      if (isScript)
+         System.out.println(line);
+
       // execute the script command
       e.executeScriptCmd(elements[0], args);
       lineCount++;
