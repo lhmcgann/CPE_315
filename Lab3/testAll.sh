@@ -1,9 +1,9 @@
 #!/bin/bash
-
 # usage message
-if [$# != 1]
+if [ $# -ne 1 ]
 then
-   echo "Usage: testAll.sh <compiled main to test>\n"
+   echo "Usage: bash testAll.sh [compiled main to test]"
+   exit 1
 fi
 
 # Compile all the needed code (in case haven't already)
