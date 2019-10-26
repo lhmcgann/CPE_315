@@ -1,5 +1,7 @@
 import java.util.Arrays;
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.FileInputStream;
 
 public class lab3 {
 
@@ -8,13 +10,13 @@ public class lab3 {
    public static void main(String[] args) {
 
       // make sure a file was given
-      if (!validRegs(args)) {
-         System.out.println("Usage: java lab2 [filename]");
+      if (!validArgs(args)) {
+         System.out.println("Usage: java lab2 <filename> [scriptFilename]");
          System.exit(1);
       }
 
       // get filename from args[0] (I tested and it is args[0] not args[1])
-      File asmFile = new File(args[0]);
+      InputStream asmFile = openStream(args[0]);
       Assembler a = new Assembler();
       AsmReader asmReader = new AsmReader(asmFile, a);
       asmReader.readThroughLines(); // first pass to build symbol table
@@ -29,9 +31,9 @@ public class lab3 {
 
       // set up script and emulator system
       Emulator e = new Emulator();
-      File script;
+      InputStream script;
       if (args.length == 2)
-         script = new File(args[1]);
+         script = openStream(args[1]);
       else
          script = System.in;
       ScriptReader scriptReader = new ScriptReader(script, e);
@@ -42,8 +44,19 @@ public class lab3 {
       scriptReader.terminate();
    }
 
-   public static boolean validRegs(String[] args) {
+   public static boolean validArgs(String[] args) {
       return args.length == 1 || args.length == 2;
+   }
+
+   public static FileInputStream openStream(String filename) {
+      try {
+         return new FileInputStream(filename);
+      }
+      catch (FileNotFoundException e) {
+         System.out.println("The file " + filename + " could not be opened.");
+         System.exit(1);
+      }
+      return null;
    }
 
 }

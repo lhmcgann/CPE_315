@@ -1,19 +1,17 @@
-import java.util.Scanner;
-import java.io.File;
-import java.util.NoSuchElementException;
+import java.io.InputStream;
 import java.util.Arrays;
 
 /**
-* Reads through all of the lines in a given File, processing each line - as
-*  specified by sublass - as it goes.
+* Reads through all of the lines in a given InputStream, processing each line
+*  - as specified by sublass - as it goes.
 */
 public class ScriptReader extends Reader {
 
    private final int MAX_ARGS = 2;
    protected Emulator e;
 
-   public ScriptReader(File file, Emulator e) {
-      super(file);
+   public ScriptReader(InputStream in, Emulator e) {
+      super(in);
       this.e = e;
    }
 

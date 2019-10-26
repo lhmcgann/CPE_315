@@ -130,7 +130,7 @@ public class Emulator {
          if (r%REGS_PER_LINE == 0)
             System.out.println();
          else
-            System.out.print("\t\t");
+            System.out.print("\t");
       }
    }
 
@@ -140,7 +140,7 @@ public class Emulator {
    private void s(int arg) {
       for (int i = 0; i < arg; i++)
          executeInstruction();
-      System.out.println("\t\t" + arg + " instruction(s) executed");
+      System.out.println("\t" + arg + " instruction(s) executed");
    }
 
    /**
@@ -174,7 +174,7 @@ public class Emulator {
       for (int i = 0; i < DM_LEN; i++)
          DM[i] = 0;
 
-      System.out.println("\t\tSimulator reset");
+      System.out.println("\tSimulator reset");
    }
 
    /**

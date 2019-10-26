@@ -1,6 +1,5 @@
 import java.util.Scanner;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.NoSuchElementException;
 import java.util.Arrays;
 
@@ -15,14 +14,8 @@ public abstract class Reader {
    protected boolean eof;
    protected static final String WHITESPACE = "\\s+";
 
-   public Reader(File file) {
-      try {
-         s = new Scanner(file);
-      }
-      catch (FileNotFoundException e) {
-         System.out.println("The asm file was not found.");
-         System.exit(1);
-      }
+   public Reader(InputStream in) {
+      s = new Scanner(in);
       lineCount = 0;
       eof = false;
    }

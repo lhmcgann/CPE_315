@@ -1,6 +1,4 @@
-import java.util.Scanner;
-import java.io.File;
-import java.util.NoSuchElementException;
+import java.io.InputStream;
 import java.util.Arrays;
 
 /**
@@ -11,8 +9,8 @@ public class AsmReader extends Reader {
 
    protected Assembler a;
 
-   public AsmReader(File file, Assembler a) {
-      super(file);
+   public AsmReader(InputStream in, Assembler a) {
+      super(in);
       this.a = a;
    }
 
