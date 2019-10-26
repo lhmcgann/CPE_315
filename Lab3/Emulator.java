@@ -1,6 +1,7 @@
 import java.io.File;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Emulator {
 
@@ -15,7 +16,7 @@ public class Emulator {
    private final int REGS_PER_LINE = 4;
    private final int DM_LEN = 8192;
    public int PC;
-   public HashMap<Integer, Integer> RF;
+   public Map<Integer, Integer> RF;
    public int[] DM;
    private ArrayList<Inst> IM;
 
@@ -121,21 +122,25 @@ public class Emulator {
    /**
    * Dump reg states
    */
-   // TODO: fix how this looks! regs in wrong order, spacing too small, $zero
    private void d() {
       System.out.println("\npc = " + PC); // print 1st buffer newline and the PC
       Object[] keys = Assembler.REGS.keySet().toArray();
+      if (lab3.DEBUG) {
+         System.out.println("old keys: " + Arrays.toString(keys));
+      }
       // skip the first reg str bc it's $zero
       for (int r = 1; r < keys.length; r++) {
          String reg = keys[r].toString();
+         int regNum = Assembler.REGS.get(reg);
          // print out each reg str and the reg's value
-         System.out.print(reg + " = " + RF.get(Assembler.REGS.get(reg)));
+         System.out.print(reg + " = " + RF.get(regNum));
          // to make the table appearance
          if (r%REGS_PER_LINE == 0)
             System.out.println();
          else
-            System.out.print("\t");
+            System.out.print("\t\t");
       }
+      System.out.println(); // so there will be a new line under the table
    }
 
    /**

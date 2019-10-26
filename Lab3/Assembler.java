@@ -1,4 +1,6 @@
 import java.util.HashMap;
+import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -11,10 +13,17 @@ public class Assembler {
       new ArrayList<Integer>(Arrays.asList(0x24, 0x25, 0x20, 0x8, 0x00,
       0x22, 0x2a, 0x4, 0x5, 0x23, 0x2b, 0x2, 0x08, 0x3));
    // maps the string representation of any instruction to a template Inst object
-   private final HashMap<String, Integer> STR_TO_CODE = new HashMap<String, Integer>();
+   private final Map<String, Integer> STR_TO_CODE = new HashMap<String, Integer>();
+
+   private final String[] REG_NAMES = {"$0", "$v0", "$v1", "$a0", "$a1", "$a2",
+      "$a3", "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$s0", "$s1",
+      "$s2", "$s3", "$s4", "$s5", "$s6", "$s7", "$t8", "$t9", "$sp", "$ra"};
+
+   private final int[] REG_NUMS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,
+      18,19,20,21,22,23,24,25,29,31};
 
    // TODO: figure out how to make this not static!
-   public static final HashMap<String, Integer> REGS = new HashMap<String,
+   public static final Map<String, Integer> REGS = new LinkedHashMap<String,
       Integer>() {{
          put("$zero", 0);
          put("$0", 0);
@@ -67,9 +76,6 @@ public class Assembler {
     * @param lineNum - the line number the open label refers to
     */
    public void addSymbol(int lineNum) {
-      if (lab3.DEBUG) {
-         System.out.println("Label '" + openLabel + "' closed with lineNum = " + lineNum);
-      }
       symbolTable.put(openLabel, lineNum);
       openLabel = null; // "close"
    }

@@ -20,12 +20,6 @@ public class lab3 {
       Assembler a = new Assembler();
       AsmReader asmReader = new AsmReader(asmFile, a);
       asmReader.readThroughLines(); // first pass to build symbol table
-      if (DEBUG) {
-         asmReader.printLabels();
-         System.out.println("\n");
-         asmReader.printInstLines();
-         System.out.println("\n");
-      }
 
       // emulator needed for second pass of Assembler and for script reading
       Emulator e = new Emulator();
