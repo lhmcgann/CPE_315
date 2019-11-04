@@ -7,9 +7,10 @@ import java.util.Arrays;
 public class Emulator {
 
    private final String HELP = "\nh = show help\nd = dump register state\n" +
-      "s = single step through the program (i.e. execute 1 instruction and stop)"
-      + "\ns num = step through num instructions of the program"
-      + "\nr = run until the program ends"
+      "p = show pipeline registers\n" +
+      "s = step through a single clock cycle step (i.e. simulate 1 cycle and stop)"
+      + "\ns num = step through num clock cycles"
+      + "\nr = run until the program ends and display timing summary"
       + "\nm num1 num2 = display data memory from location num1 to num2"
       + "\nc = clear all registers, memory, and the program counter to 0"
       + "\nq = exit the program";
@@ -87,7 +88,10 @@ public class Emulator {
          case "d": // dump reg state
             d();
             break;
-         case "s": // step through 1 or n insts
+         case "p": // show what insts in what pipeline regs
+            p();
+            break;
+         case "s": // step through 1 or n clock cycles
             if (args[0] == -1)
                s(1);
             else
@@ -142,6 +146,11 @@ public class Emulator {
             System.out.print("\t\t");
       }
       System.out.println(); // so there will be a new line under the table
+   }
+
+   // TODO: implement this
+   private void p() {
+
    }
 
    /**
