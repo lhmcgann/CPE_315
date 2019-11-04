@@ -14,8 +14,8 @@ for testInput in *.asm; do
    name=${testInput%.asm}
 
    # Run the test
-   java $1 $testInput $name.script > $name.myout
+   java $1 $testInput $name.script.txt > $name.myout
 
    # diff the results
-   diff -w -B $name.myout $name.output
+   diff -w -B $name.myout $name.output.txt
 done
