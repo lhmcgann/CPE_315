@@ -37,7 +37,7 @@ public class ShiftInst extends RInst {
    }
 
    @Override
-   public void execute(Emulator e) {
+   public void emulate(Emulator e) {
       e.RF.put(rd, e.RF.get(rt) << shamt);
    }
 

@@ -8,7 +8,7 @@ public class SltInst extends RInst {
    }
 
    @Override
-   public void execute(Emulator e) {
+   public void emulate(Emulator e) {
       if (e.RF.get(rs) < e.RF.get(rt))
          e.RF.put(rd, 1);
       else

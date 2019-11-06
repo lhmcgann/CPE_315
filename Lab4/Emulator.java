@@ -76,9 +76,9 @@ public class Emulator {
    /**
    * Execute the next instruction, THEN increment the PC.
    */
-   private void executeInstruction() {
+   private void emulateInstruction() {
       PC++; // increment PC first so any cmds that modify PC aren't affected
-      IM.get(PC-1).execute(this);
+      IM.get(PC-1).emulate(this);
       // run CPU sim w/ new inst's name entering the CPU
       sim.runOneCC(IM.get(PC-1).getName());
    }
@@ -165,7 +165,7 @@ public class Emulator {
    */
    private void s(int arg) {
       for (int i = 0; i < arg; i++)
-         executeInstruction();
+         emulateInstruction();
       // TODO: call p() for s and s num? per inst executed? still need below println?
       p(); // dump pipeline regs at the end
       System.out.println("\t" + arg + " instruction(s) executed");
@@ -177,7 +177,7 @@ public class Emulator {
    // TODO: program complete message (see spec)
    private void r() {
       while(PC < IM.size())
-         executeInstruction(); // increments PC
+         emulateInstruction(); // increments PC
    }
 
    /**

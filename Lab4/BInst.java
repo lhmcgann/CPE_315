@@ -14,7 +14,7 @@ public abstract class BInst extends IInst implements NeedsLabelAdr {
    }
 
    @Override
-   public void execute(Emulator e) {
+   public void emulate(Emulator e) {
       if (shouldBranch(e))
          e.PC = labelAdr;
    }
