@@ -22,7 +22,8 @@ public class lab4 {
       asmReader.readThroughLines(); // first pass to build symbol table
 
       // emulator needed for second pass of Assembler and for script reading
-      Emulator e = new Emulator();
+      Simulator sim = new Simulator();
+      Emulator e = new Emulator(sim);
 
       a.secondPass(e); // store processed lines at line nums; compute labelAdrs
       asmReader.terminate();

@@ -4,7 +4,7 @@ public abstract class Inst {
    protected final int OP_SIZE = 6; // bit width
    protected final int REG_SIZE = 5; // bit width
 
-   protected String inst;
+   protected String name;
    protected int op;
    protected int lineNum;
 
@@ -12,7 +12,7 @@ public abstract class Inst {
    * A Inst with an initially known string representation and associated opcode
    */
    public Inst(String inst, int code) {
-      this.inst = inst;
+      name = inst;
       op = code;
       lineNum = 0;
    }
@@ -43,8 +43,8 @@ public abstract class Inst {
       return bin.substring(bin.length() - bitWidth, bin.length());
    }
 
-   public String getInst() {
-      return inst;
+   public String getName() {
+      return name;
    }
 
    public int getOpcode() {

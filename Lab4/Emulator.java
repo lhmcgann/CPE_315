@@ -4,6 +4,9 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+* Emulates the execution of MIPS instructions.
+*/
 public class Emulator {
 
    private final String HELP = "\nh = show help\nd = dump register state\n" +
@@ -22,7 +25,10 @@ public class Emulator {
    public int[] DM;
    private ArrayList<Inst> IM;
 
-   public Emulator() {
+   private Simulator sim;
+
+   public Emulator(Simulator sim) {
+      this.sim = sim;
       PC = 0;
       // maps number representations of all supported registers to reg's value
       RF = new HashMap<Integer,
@@ -73,6 +79,8 @@ public class Emulator {
    private void executeInstruction() {
       PC++; // increment PC first so any cmds that modify PC aren't affected
       IM.get(PC-1).execute(this);
+      // run CPU sim w/ new inst's name entering the CPU
+      sim.runOneCC(IM.get(PC-1).getName());
    }
 
    /**
@@ -148,9 +156,8 @@ public class Emulator {
       System.out.println(); // so there will be a new line under the table
    }
 
-   // TODO: implement this
    private void p() {
-
+      sim.dumpPRegs();
    }
 
    /**
@@ -159,12 +166,15 @@ public class Emulator {
    private void s(int arg) {
       for (int i = 0; i < arg; i++)
          executeInstruction();
+      // TODO: call p() for s and s num? per inst executed? still need below println?
+      p(); // dump pipeline regs at the end
       System.out.println("\t" + arg + " instruction(s) executed");
    }
 
    /**
    * Run until program end
    */
+   // TODO: program complete message (see spec)
    private void r() {
       while(PC < IM.size())
          executeInstruction(); // increments PC
@@ -192,7 +202,7 @@ public class Emulator {
       // reset Data Mem
       for (int i = 0; i < DM_LEN; i++)
          DM[i] = 0;
-
+      sim.resetSim();
       System.out.println("\tSimulator reset");
    }
 
