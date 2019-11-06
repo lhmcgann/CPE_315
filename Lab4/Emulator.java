@@ -166,9 +166,7 @@ public class Emulator {
    private void s(int arg) {
       for (int i = 0; i < arg; i++)
          emulateInstruction();
-      // TODO: call p() for s and s num? per inst executed? still need below println?
-      p(); // dump pipeline regs at the end
-      System.out.println("\t" + arg + " instruction(s) executed");
+      p(); // dump pipeline regs at the end, regardless of # steps
    }
 
    /**
@@ -178,6 +176,11 @@ public class Emulator {
    private void r() {
       while(PC < IM.size())
          emulateInstruction(); // increments PC
+
+      // Print the Program complete message
+      System.out.println("\nProgram complete");
+      System.out.printf("CPI = %.2f\tCycles = %d\tInstructions = %d\n",
+         sim.getCPI(), sim.getCCCount(), sim.numInsts());
    }
 
    /**
