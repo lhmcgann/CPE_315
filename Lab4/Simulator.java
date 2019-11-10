@@ -44,7 +44,7 @@ public class Simulator {
    */
    private void writeBack() {
       // incr inst count if an actual instruciton completes in this cycle
-      if (!(mem_wb == null || (mem_wb instanceof Stall) /*|| (mem_wb instanceof Squash)*/))
+      if (!(mem_wb == null || (mem_wb instanceof Stall) || (mem_wb instanceof Squash)))
          numInsts++;
    }
    /**
@@ -76,7 +76,6 @@ public class Simulator {
          stalled = true;
          id_ex = new Stall();
       }
-      // TODO: elif jump: squashed true, hold = 1 (but do hold in Em/Inst itself)
       // otherwise, pass insts through pipeline as normal (if not already squashed)
       else if (!squashed)
          id_ex = if_id;
@@ -86,6 +85,14 @@ public class Simulator {
    * @param nextInst - the next Inst to enter the pipeline (is at the current PC)
    */
    private void fetch(Inst nextInst) {
+      // if jump, squash one inst
+      int adr;
+      if ((adr = jump()) != -1) {
+         squashed = true;
+         if_id = new Squash();
+         PC = adr;
+      }
+      // now see if next inst goes into pipeline
       if (!(stalled || squashed)) {
          PC++;
          if_id = nextInst;
@@ -110,7 +117,7 @@ public class Simulator {
 
       // return next adr if taken, -1 if not
       if (br.taken)
-         return br.labelAdr;
+         return br.getLabelAdr();
       return -1;
    }
 
@@ -131,6 +138,23 @@ public class Simulator {
 
       // check to see if any regs match
       return (lw.rt == nextInst.rs || lw.rt == nextInst.rt);
+   }
+
+   /**
+   * @return - the address to jump to, -1 if not a jump
+   */
+   private int jump() {
+      // if j or jal, return the label adr
+      if (if_id instanceof JInst) {
+         JInst j = (JInst) if_id;
+         return j.getLabelAdr();
+      }
+      // if jr, use that get adr fnxn
+      if (if_id instanceof JrInst) {
+         JrInst jr = (JrInst) if_id;
+         return jr.getAdr();
+      }
+      return -1; // not any kind of jump
    }
 
    /**

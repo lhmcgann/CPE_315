@@ -1,6 +1,6 @@
 public abstract class BInst extends IInst implements NeedsLabelAdr {
 
-   public int labelAdr;
+   protected int labelAdr;
    public boolean taken;
 
    /**
@@ -40,6 +40,11 @@ public abstract class BInst extends IInst implements NeedsLabelAdr {
    @Override
    public void setLabelAdr(int labelAdr) {
       this.labelAdr = labelAdr;
+   }
+
+   @Override
+   public int getLabelAdr() {
+      return labelAdr;
    }
 
 }

@@ -41,8 +41,14 @@ public class JInst extends Inst implements NeedsLabelAdr {
    }
 
    @Override
+   public int getLabelAdr() {
+      return labelAdr;
+   }
+
+   @Override
    public void emulate(Emulator e) {
       e.PC = labelAdr;
+      e.hold = 1;
    }
 
 }
