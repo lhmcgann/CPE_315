@@ -182,7 +182,8 @@ public class Simulator {
    * Print out what instruction is in each pipeline register, "empty" if none.
    */
    public void dumpPRegs() {
-      System.out.println("pc\tif/id\tid/exe\texe/mem\tmem/wb");
+      // TODO: change CPI to 3 (not 2) decimal places
+      System.out.println("\npc\tif/id\tid/exe\texe/mem\tmem/wb");
       System.out.println(PC + " \t" + printPReg(if_id) + '\t' + printPReg(id_ex)
          + '\t' + printPReg(ex_mem) + '\t' + printPReg(mem_wb));
    }
