@@ -11,7 +11,7 @@ public class JalInst extends JInst {
    @Override
    public void emulate(Emulator e) {
       e.RF.put(RA, e.PC); // store PC (already incremented) before jumping
-      e.PC = labelAdr; // super(e);
+      e.PC = labelAdr;
    }
 
 }

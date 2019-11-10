@@ -17,7 +17,7 @@ public class Simulator {
    private int numStalls;
    private int numSquashed;
    private boolean stalled;
-   // private boolean squashed;
+   private boolean squashed;
 
    public Simulator() {
       resetSim();
@@ -34,6 +34,9 @@ public class Simulator {
       execute();
       decode();
       fetch(IM.get(PC));
+      if (lab4.DEBUG) {
+         System.out.println("\tSim PC: " + PC);
+      }
    }
 
    /**
@@ -49,18 +52,19 @@ public class Simulator {
    */
    private void memory() {
       mem_wb = ex_mem; // happens regardless of squash, but this is where squash happens
-      // if (branchTaken()) {
-      //    squashed = true;
-      //    // prev 3 PRegs get squashed
-      //    if_id = id_ex = ex_mem = new Squash();
-      //    // TODO: PC set to taken br code; add arg to runOneCC to take in br/j PC?, -1 if not needed?
-      // }
+      int adr;
+      if ((adr = branchTaken()) != -1) {
+         squashed = true;
+         // prev 3 PRegs get squashed
+         if_id = id_ex = ex_mem = new Squash();
+         PC = adr; // this will not be overwritten later
+      }
    }
    /**
    * Runs the execute stage. Data moves from id_ex to ex_mem.
    */
    private void execute() {
-      // if (!squashed)
+      if (!squashed)
          ex_mem = id_ex; // this happens regardless of stall
    }
    /**
@@ -71,34 +75,43 @@ public class Simulator {
       if (useAfterLoad()) {
          stalled = true;
          id_ex = new Stall();
-         // TODO: e.hold = 1? as opposed to returning the val? make uaL func in Em too?
       }
-      // otherwise, pass insts through pipeline as normal (if not already squashed)
-      else /*if (!squashed)*/
-         id_ex = if_id;
       // TODO: elif jump: squashed true, hold = 1 (but do hold in Em/Inst itself)
+      // otherwise, pass insts through pipeline as normal (if not already squashed)
+      else if (!squashed)
+         id_ex = if_id;
    }
    /**
    * Runs the instruction fetch stage. Data moves from "PC" to if_id.
    * @param nextInst - the next Inst to enter the pipeline (is at the current PC)
    */
    private void fetch(Inst nextInst) {
-      // TODO: fix this (see below 3 comments)
-      // stall -> do NOT incr PC
-      // squash -> DO incr PC,
-      // both -> d NOT change id_if
-      // if not stalled, incr PC and get new inst; else CPU at this pt stays same
-      if (!stalled /*&& !squashed*/) {
+      if (!(stalled || squashed)) {
          PC++;
          if_id = nextInst;
       }
-      else { // doesn't matter which one happened; either way, both now completed
-         stalled = false; // stall has happened, resume normal functionality
-         // squashed = false; // squash happened, resume normal functionality
+      else {
+         // PC, if_id don't change; either way (squash, stall, both), all now false
+         stalled = false; // stall taken care of
+         squashed = false; //squashing taken care of
       }
 
-      // no matter what, another clock cycle has completed
-      ccCount++;
+      ccCount++; // no matter what, another clock cycle has completed
+   }
+
+   /**
+   * @return - if taken, the adr to jump to; -1 if not a br or br not taken
+   */
+   private int branchTaken() {
+      if (!(mem_wb instanceof BInst))
+         return -1;
+      // downcast so can check taken
+      BInst br = (BInst) mem_wb;
+
+      // return next adr if taken, -1 if not
+      if (br.taken)
+         return br.labelAdr;
+      return -1;
    }
 
    /**
@@ -166,7 +179,7 @@ public class Simulator {
    public void resetSim() {
       if_id = id_ex = ex_mem = mem_wb = null;
       PC = ccCount = numInsts = numStalls = numSquashed = 0;
-      stalled /*= squashed*/ = false;
+      stalled = squashed = false;
    }
 
 }

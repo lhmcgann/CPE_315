@@ -1,6 +1,7 @@
 public abstract class BInst extends IInst implements NeedsLabelAdr {
 
-   protected int labelAdr;
+   public int labelAdr;
+   public boolean taken;
 
    /**
    * A Inst with an initially known string inst representation and associated opcode.
@@ -16,7 +17,8 @@ public abstract class BInst extends IInst implements NeedsLabelAdr {
    @Override
    public void emulate(Emulator e) {
       if (shouldBranch(e)) {
-         // e.hold = 3; // if branch taken, put Emulator on hold for 3 cycles
+         taken = true; // so sim knows
+         e.hold = 3; // if branch taken, put Emulator on hold for 3 cycles
          e.PC = labelAdr;
       }
    }
