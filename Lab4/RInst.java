@@ -1,13 +1,9 @@
-public abstract class RInst extends Inst {
+public abstract class RInst extends RegInst {
 
    // rXI: the index in a given String[] line where the value of rX can be found
-   protected int rsI;
-   protected int rtI;
    protected int rdI;
 
    // the number representation of the desired register
-   protected int rs;
-   protected int rt;
    protected int rd;
    protected int shamt;
    protected int funct;

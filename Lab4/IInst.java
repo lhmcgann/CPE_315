@@ -1,16 +1,12 @@
 import java.lang.NumberFormatException;
 
-public abstract class IInst extends Inst {
+public abstract class IInst extends RegInst {
 
    protected final int IMD_SIZE = 16;
 
    // rXI: the index in a given String[] line where the value of rX can be found
-   protected int rsI;
-   protected int rtI;
    protected int imdI;
-
-   protected int rt;
-   protected int rs;
+   
    protected int imd;
 
    /**

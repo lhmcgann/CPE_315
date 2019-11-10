@@ -26,10 +26,12 @@ public class Emulator {
    private ArrayList<Inst> IM;
 
    private Simulator sim;
+   // public int hold;
 
    public Emulator(Simulator sim) {
       this.sim = sim;
       PC = 0;
+      // hold = 0;
       // maps number representations of all supported registers to reg's value
       RF = new HashMap<Integer,
          Integer>() {{
@@ -77,10 +79,17 @@ public class Emulator {
    * Execute the next instruction, THEN increment the PC.
    */
    private void emulateInstruction() {
-      PC++; // increment PC first so any cmds that modify PC aren't affected
-      IM.get(PC-1).emulate(this);
-      // run CPU sim w/ new inst's name entering the CPU
-      sim.runOneCC(IM.get(PC-1).getName());
+      // if Em on hold (i.e. bc br taken) don't emulate next insts
+      // if (hold > 0) {
+      //    hold--;
+      // }
+      // else { // else emulate as normal
+         // increment PC first so any cmds that modify PC aren't affected
+         PC++;
+         IM.get(PC-1).emulate(this);
+      // }
+      // run CPU sim; pass in IM so sim can access next Inst using its own PC
+      sim.runOneCC(IM);
    }
 
    /**
@@ -172,7 +181,6 @@ public class Emulator {
    /**
    * Run until program end
    */
-   // TODO: program complete message (see spec)
    private void r() {
       while(PC < IM.size())
          emulateInstruction(); // increments PC
