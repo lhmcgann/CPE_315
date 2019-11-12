@@ -6,7 +6,7 @@ public abstract class IInst extends RegInst {
 
    // rXI: the index in a given String[] line where the value of rX can be found
    protected int imdI;
-   
+
    protected int imd;
 
    /**
@@ -50,6 +50,10 @@ public abstract class IInst extends RegInst {
    public String getBinInstruction() {
       return intToBin(op, OP_SIZE) + " " + intToBin(rs, REG_SIZE) + " " +
          intToBin(rt, REG_SIZE) + " " + intToBin(imd, IMD_SIZE);
+   }
+
+   public boolean usesReg(int regNum) {
+      return regNum == rs;
    }
 
 }

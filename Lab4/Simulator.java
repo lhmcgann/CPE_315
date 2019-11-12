@@ -34,9 +34,9 @@ public class Simulator {
       execute();
       decode();
       fetch(IM.get(PC));
-      if (lab4.DEBUG) {
-         System.out.println("\tSim PC: " + PC);
-      }
+
+      if (lab4.DEBUG)
+         System.out.println("\tSim PC: "+PC);
    }
 
    /**
@@ -44,8 +44,12 @@ public class Simulator {
    */
    private void writeBack() {
       // incr inst count if an actual instruciton completes in this cycle
-      if (!(mem_wb == null || (mem_wb instanceof Stall) || (mem_wb instanceof Squash)))
+      if (!(mem_wb == null || (mem_wb instanceof Stall) || (mem_wb instanceof Squash))) {
          numInsts++;
+         if (lab4.DEBUG) {
+            System.out.println("\tNum Insts: " + numInsts);
+         }
+      }
    }
    /**
    * Runs the memory stage. Data moves from ex_mem to mem_wb.
@@ -104,6 +108,9 @@ public class Simulator {
       }
 
       ccCount++; // no matter what, another clock cycle has completed
+      if (lab4.DEBUG) {
+         System.out.println("\tCC: " + ccCount);
+      }
    }
 
    /**
@@ -126,18 +133,11 @@ public class Simulator {
    */
    private boolean useAfterLoad() {
       // only proceed if there's actually a lw inst
-      if (!(id_ex instanceof LwInst))
-         return false;
-      // only proceed if following inst is an RInst or IInst bc will have rs, rt
-      if (!(if_id instanceof RegInst))
-         return false;
-
-      // downcast so can access regs
-      LwInst lw = (LwInst) id_ex;
-      RegInst nextInst = (RegInst) if_id;
-
-      // check to see if any regs match
-      return (lw.rt == nextInst.rs || lw.rt == nextInst.rt);
+      if ((id_ex instanceof LwInst)) {
+         LwInst lw = (LwInst) id_ex;
+         return lw.isUAL();
+      }
+      return false;
    }
 
    /**

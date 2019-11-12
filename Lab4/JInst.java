@@ -13,7 +13,7 @@ public class JInst extends Inst implements NeedsLabelAdr {
    public JInst(String inst, int code) {
       super(inst, code);
       imdI = 1;
-      imd = 0;
+      imd = -1;
 
       labelAdr = -1;
    }
@@ -33,6 +33,10 @@ public class JInst extends Inst implements NeedsLabelAdr {
 
    public String getBinInstruction() {
       return intToBin(op, OP_SIZE) + " " + intToBin(imd, IMD_SIZE);
+   }
+
+   public boolean usesReg(int regNum) {
+      return false;
    }
 
    @Override

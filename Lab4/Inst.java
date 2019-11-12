@@ -43,6 +43,8 @@ public abstract class Inst {
       return bin.substring(bin.length() - bitWidth, bin.length());
    }
 
+   public abstract boolean usesReg(int regNum);
+
    public String getName() {
       return name;
    }

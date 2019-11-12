@@ -15,15 +15,15 @@ public abstract class RInst extends RegInst {
       super(inst, code);
       // bc funct only used for R-Format instructions, & opcode 0 if funct used
       funct = code;
-      op = 0;
+      op = 0; // MUST stay 0 here, else binary wrong. RInsts only use funct.
 
       // values for most cases
       rsI = 2;
       rtI = 3;
       rdI = 1;
 
-      // default values
-      rt = rs = rd = shamt = 0;
+      // impossible default values
+      rt = rs = rd = shamt = -1;
    }
 
    protected boolean validRegs(String[] line) {
@@ -43,6 +43,10 @@ public abstract class RInst extends RegInst {
       return intToBin(op, OP_SIZE) + " " + intToBin(rs, REG_SIZE) + " " +
          intToBin(rt, REG_SIZE) + " " + intToBin(rd, REG_SIZE) + " " +
          intToBin(shamt, REG_SIZE) + " " + intToBin(funct, OP_SIZE);
+   }
+
+   public boolean usesReg(int regNum) {
+      return regNum == rs || regNum == rt;
    }
 
 }

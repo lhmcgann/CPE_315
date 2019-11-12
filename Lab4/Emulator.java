@@ -27,11 +27,13 @@ public class Emulator {
 
    private Simulator sim;
    public int hold;
+   private boolean checkUAL;
 
    public Emulator(Simulator sim) {
       this.sim = sim;
       PC = 0;
       hold = 0;
+      checkUAL = false;
       // maps number representations of all supported registers to reg's value
       RF = new HashMap<Integer,
          Integer>() {{
@@ -76,24 +78,54 @@ public class Emulator {
    }
 
    /**
-   * Execute the next instruction, THEN increment the PC.
+   * If not on hold, increment the PC, then emulate the next instruction.
    */
    private void emulateInstruction() {
-      // if Em on hold (i.e. bc br taken) don't emulate next insts
+      // if Em on hold (i.e. bc br taken), don't emulate next insts
       if (hold > 0) {
          hold--;
       }
       else { // else emulate as normal
          // increment PC first so any cmds that modify PC aren't affected
          PC++;
-         IM.get(PC-1).emulate(this);
+         Inst currInst = IM.get(PC - 1);
+
+         // if lw, must check use_after_load
+         if (currInst instanceof LwInst) {
+            LwInst lw = (LwInst) currInst;
+            if (useAfterLoad(lw)) {
+               hold = 1; // don't emualate the next inst yet
+               lw.markUAL();
+            }
+         }
+
+         currInst.emulate(this);
+         if (lab4.DEBUG) {
+            System.out.println("\tEmulated " + IM.get(PC-1).getName());
+         }
       }
 
       if (lab4.DEBUG) {
-         System.out.println("\tEm PC:  " + PC);
+         System.out.println("\tEm PC: "+PC);
       }
+
       // run CPU sim; pass in IM so sim can access next Inst using its own PC
       sim.runOneCC(IM);
+   }
+
+   private boolean useAfterLoad(LwInst lw) {
+      Inst nextInst;
+      // currInst already lw if get to this pt; check rest of conditions
+      if ((PC < IM.size()) && ((nextInst = IM.get(PC)) instanceof RegInst)) {
+         // downcast so can access regs
+         RegInst regInst = (RegInst) nextInst;
+
+         // check to see if any regs match
+         return (lw.rt == regInst.rs || lw.rt == regInst.rt);
+      }
+
+      // conditions not met
+      return false;
    }
 
    /**
