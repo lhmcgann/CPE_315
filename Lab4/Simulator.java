@@ -16,10 +16,17 @@ public class Simulator {
    private int PC; // Simulator has it's own PC bc implementing Sim as separate from actual execution (Emulator)
    private int ccCount;
    private int numInsts;
-   private int numStalls;
-   private int numSquashed;
    private boolean stalled;
    private boolean squashed;
+
+   /**
+   * Completely resets this Simulator: pipeline regs, PC, everything.
+   */
+   public void resetSim() {
+      if_id = id_ex = ex_mem = mem_wb = new Blank(EMPTY);
+      PC = ccCount = numInsts = 0;
+      stalled = squashed = false;
+   }
 
    public Simulator() {
       resetSim();
@@ -38,7 +45,7 @@ public class Simulator {
       fetch(getNextInst(IM));
 
       if (lab4.DEBUG)
-         System.out.println("\tSim PC: "+PC);
+         System.out.println("\tSim PC: "+PC+'\n');
    }
 
    /**
@@ -139,6 +146,9 @@ public class Simulator {
       // downcast so can check taken
       BInst br = (BInst) mem_wb;
 
+      if (lab4.DEBUG)
+         System.out.println("\t\tBNE " + br + " should branch? " + br.taken);
+
       // return next adr if taken, -1 if not
       if (br.taken)
          return br.getLabelAdr();
@@ -199,7 +209,6 @@ public class Simulator {
    * Print out what instruction is in each pipeline register, "empty" if none.
    */
    public void dumpPRegs() {
-      // TODO: change CPI to 3 (not 2) decimal places
       System.out.println("\npc\tif/id\tid/exe\texe/mem\tmem/wb");
       System.out.println(PC + " \t" + printPReg(if_id) + '\t' + printPReg(id_ex)
          + '\t' + printPReg(ex_mem) + '\t' + printPReg(mem_wb));
@@ -211,15 +220,6 @@ public class Simulator {
    */
    private String printPReg(Inst pReg) {
       return pReg.getName();
-   }
-
-   /**
-   * Completely resets this Simulator: pipeline regs, PC, everything.
-   */
-   public void resetSim() {
-      if_id = id_ex = ex_mem = mem_wb = new Blank(EMPTY);
-      PC = ccCount = numInsts = numStalls = numSquashed = 0;
-      stalled = squashed = false;
    }
 
 }

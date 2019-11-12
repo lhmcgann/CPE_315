@@ -83,6 +83,10 @@ public class Emulator {
    private void emulateInstruction() {
       // if Em on hold (i.e. bc br taken), don't emulate next insts
       if (hold > 0) {
+         if (lab4.DEBUG) {
+            System.out.println("\t\tholding " + hold);
+         }
+
          hold--;
       }
       else { // else emulate as normal
@@ -101,7 +105,7 @@ public class Emulator {
 
          currInst.emulate(this);
          if (lab4.DEBUG) {
-            System.out.println("\tEmulated " + IM.get(PC-1).getName());
+            System.out.println("\tEmulated " + currInst.getName());
          }
       }
 
@@ -226,7 +230,7 @@ public class Emulator {
       }
       // Print the Program complete message
       System.out.println("\nProgram complete");
-      System.out.printf("CPI = %.2f\tCycles = %d\tInstructions = %d\n",
+      System.out.printf("CPI = %.3f\tCycles = %d\tInstructions = %d\n",
          sim.getCPI(), sim.getCCCount(), sim.numInsts());
    }
 
@@ -252,6 +256,9 @@ public class Emulator {
       // reset Data Mem
       for (int i = 0; i < DM_LEN; i++)
          DM[i] = 0;
+      // reset other Em vars
+      hold = 0; checkUAL = false;
+
       sim.resetSim();
       System.out.println("\tSimulator reset");
    }

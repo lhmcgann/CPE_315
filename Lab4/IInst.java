@@ -53,7 +53,7 @@ public abstract class IInst extends RegInst {
    }
 
    public boolean usesReg(int regNum) {
-      return regNum == rs;
+      return regNum != 0 && regNum == rs;
    }
 
 }

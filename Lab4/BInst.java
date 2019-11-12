@@ -10,14 +10,14 @@ public abstract class BInst extends IInst implements NeedsLabelAdr {
       super(inst, code);
       rtI = 2;
       rsI = 1;
-
+      taken = false;
       labelAdr = -1;
    }
 
    @Override
    public void emulate(Emulator e) {
-      if (shouldBranch(e)) {
-         taken = true; // so sim knows
+      if ((taken = shouldBranch(e))) {
+         // taken = true; // so sim knows
          e.hold = 3; // if branch taken, put Emulator on hold for 3 cycles
          e.PC = labelAdr;
       }

@@ -66,6 +66,6 @@ pc	if/id	id/exe	exe/mem	mem/wb
 mips> r
 
 Program complete
-CPI = 1.43	Cycles = 43	Instructions = 30
+CPI = 1.400	Cycles = 42	Instructions = 30
 
 mips> q
