@@ -115,13 +115,11 @@ public class Emulator {
 
    private boolean useAfterLoad(LwInst lw) {
       Inst nextInst;
-      // currInst already lw if get to this pt; check rest of conditions
-      if ((PC < IM.size()) && ((nextInst = IM.get(PC)) instanceof RegInst)) {
-         // downcast so can access regs
-         RegInst regInst = (RegInst) nextInst;
-
-         // check to see if any regs match
-         return (lw.rt == regInst.rs || lw.rt == regInst.rt);
+      // currInst = lw if get to here; check rest of conditions if next inst exists
+      if (PC < IM.size()) {
+         nextInst = IM.get(PC);
+         // check to see if uses lw's dest register
+         return nextInst.usesReg(lw.rt);
       }
 
       // conditions not met
@@ -221,6 +219,11 @@ public class Emulator {
       while(PC < IM.size())
          emulateInstruction(); // increments PC
 
+      sim.flushCPU(IM); // to push through all of the last insts
+
+      if (lab4.DEBUG) {
+         p();
+      }
       // Print the Program complete message
       System.out.println("\nProgram complete");
       System.out.printf("CPI = %.2f\tCycles = %d\tInstructions = %d\n",

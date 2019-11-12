@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 
 public class lab4 {
 
-   public static boolean DEBUG = true;
+   public static boolean DEBUG = false;
 
    public static void main(String[] args) {
 

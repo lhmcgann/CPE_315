@@ -1,10 +1,10 @@
-public class Squash extends Inst {
+public class Blank extends Inst {
 
    /**
-   * An empty Inst representing a Stall
+   * An empty Inst, used to represent a Stall or a Squash.
    */
-   public Squash() {
-      super("squash", -1);
+   public Blank(String name) {
+      super(name, -1);
    }
 
    public void emulate(Emulator e) {}
@@ -13,4 +13,6 @@ public class Squash extends Inst {
    protected void computeArgs(String[] line) {}
 
    public String getBinInstruction() { return null; }
+
+   public boolean usesReg(int regNum) { return false; }
 }

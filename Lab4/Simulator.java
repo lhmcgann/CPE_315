@@ -6,6 +6,8 @@ import java.util.ArrayList;
 public class Simulator {
 
    private final String EMPTY = "empty";
+   private final String STALL = "stall";
+   private final String SQUASH = "squash";
 
    private Inst if_id;
    private Inst id_ex;
@@ -33,10 +35,19 @@ public class Simulator {
       memory();
       execute();
       decode();
-      fetch(IM.get(PC));
+      fetch(getNextInst(IM));
 
       if (lab4.DEBUG)
          System.out.println("\tSim PC: "+PC);
+   }
+
+   /**
+   * Call when reached end of the program to push last insts through CPU.
+   TODO: figure out how to get rid of IM param here; shouldn't need it :/
+   */
+   public void flushCPU(ArrayList<Inst> IM) {
+      while (!mem_wb.getName().equals(EMPTY))
+         runOneCC(IM);
    }
 
    /**
@@ -44,7 +55,7 @@ public class Simulator {
    */
    private void writeBack() {
       // incr inst count if an actual instruciton completes in this cycle
-      if (!(mem_wb == null || (mem_wb instanceof Stall) || (mem_wb instanceof Squash))) {
+      if (!(mem_wb instanceof Blank)) {
          numInsts++;
          if (lab4.DEBUG) {
             System.out.println("\tNum Insts: " + numInsts);
@@ -60,7 +71,7 @@ public class Simulator {
       if ((adr = branchTaken()) != -1) {
          squashed = true;
          // prev 3 PRegs get squashed
-         if_id = id_ex = ex_mem = new Squash();
+         if_id = id_ex = ex_mem = new Blank(SQUASH);
          PC = adr; // this will not be overwritten later
       }
    }
@@ -78,7 +89,7 @@ public class Simulator {
       // if use after load detected, insert a stall
       if (useAfterLoad()) {
          stalled = true;
-         id_ex = new Stall();
+         id_ex = new Blank(STALL);
       }
       // otherwise, pass insts through pipeline as normal (if not already squashed)
       else if (!squashed)
@@ -92,12 +103,12 @@ public class Simulator {
       // if jump, squash one inst
       int adr;
       if ((adr = jump()) != -1) {
-         squashed = true;
-         if_id = new Squash();
+         // squashed = true; // don't need to do this bc no other stages need to know; the work is done here
+         if_id = new Blank(SQUASH);
          PC = adr;
       }
       // now see if next inst goes into pipeline
-      if (!(stalled || squashed)) {
+      else if (!(stalled || squashed)) {
          PC++;
          if_id = nextInst;
       }
@@ -111,6 +122,12 @@ public class Simulator {
       if (lab4.DEBUG) {
          System.out.println("\tCC: " + ccCount);
       }
+   }
+
+   private Inst getNextInst(ArrayList<Inst> IM) {
+      if (PC < IM.size())
+         return IM.get(PC);
+      else return new Blank(EMPTY);
    }
 
    /**
@@ -193,16 +210,14 @@ public class Simulator {
    * @return - the String representation of the inst in a given pReg
    */
    private String printPReg(Inst pReg) {
-      if (pReg == null)
-         return EMPTY;
-      else return pReg.getName();
+      return pReg.getName();
    }
 
    /**
    * Completely resets this Simulator: pipeline regs, PC, everything.
    */
    public void resetSim() {
-      if_id = id_ex = ex_mem = mem_wb = null;
+      if_id = id_ex = ex_mem = mem_wb = new Blank(EMPTY);
       PC = ccCount = numInsts = numStalls = numSquashed = 0;
       stalled = squashed = false;
    }

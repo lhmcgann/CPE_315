@@ -1,0 +1,43 @@
+hazard detector:
+
+get next inst
+if lw:
+   set check_ual for next time
+emulate lw
+
+get next inst
+emulate next inst
+if check_ual:
+   check_ual = false
+   if use_after_load:
+      hold = 1
+
+use_after_load:
+   if current inst is lw
+      and there is a next inst
+      and the next inst is a RegInst
+      and the RegInst uses the Lw's dest reg
+      THEN return true
+
+case: lw    lw    add (ual)
+get lw
+is lw -> check_ual = true
+is check_ual ->
+   check_ual = false
+   use_after_load? (F)
+emulate lw
+
+get lw
+is lw -> check_ual = true
+is check_ual ->
+   check_ual = false
+   use_after_load? (T)
+      hold = 1
+emulate lw
+
+HOLD
+
+get add
+is not lw
+is not check_ual
+emulate
