@@ -50,7 +50,6 @@ public class Simulator {
 
    /**
    * Call when reached end of the program to push last insts through CPU.
-   TODO: figure out how to get rid of IM param here; shouldn't need it :/
    */
    public void flushCPU(ArrayList<Inst> IM) {
       while (!mem_wb.getName().equals(EMPTY))
@@ -131,6 +130,11 @@ public class Simulator {
       }
    }
 
+   /**
+   * @param IM - Instruction Memory from which to get the next inst
+   * @return - the next Inst to put in the pipeline; an "empty" Inst if reached
+   *  end of program
+   */
    private Inst getNextInst(ArrayList<Inst> IM) {
       if (PC < IM.size())
          return IM.get(PC);

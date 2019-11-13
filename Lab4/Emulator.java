@@ -18,7 +18,7 @@ public class Emulator {
       + "\nc = clear all registers, memory, and the program counter to 0"
       + "\nq = exit the program";
    private final String CMD_PROMPT = "\nmips> ";
-   private final int REGS_PER_LINE = 4;
+   private final int REGS_PER_PRINT_LINE = 4;
    private final int DM_LEN = 8192;
    public int PC;
    public Map<Integer, Integer> RF;
@@ -68,9 +68,7 @@ public class Emulator {
       DM = new int[DM_LEN];
       IM = new ArrayList<Inst>();
 
-      // TODO: fix this! when to print this? edit actual execute fnxn so don't
-      //    need special thing here; this will also run b4 a.secondPass(e);
-      System.out.print("mips> ");
+      System.out.print(CMD_PROMPT);
    }
 
    public void addInst(Inst inst) {
@@ -195,7 +193,7 @@ public class Emulator {
          // print out each reg str and the reg's value
          System.out.print(reg + " = " + RF.get(regNum));
          // to make the table appearance
-         if (r%REGS_PER_LINE == 0)
+         if (r%REGS_PER_PRINT_LINE == 0)
             System.out.println();
          else
             System.out.print("\t\t");
