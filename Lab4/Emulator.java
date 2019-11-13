@@ -67,10 +67,8 @@ public class Emulator {
          }};
       DM = new int[DM_LEN];
       IM = new ArrayList<Inst>();
-
-      // TODO: fix this! when to print this? edit actual execute fnxn so don't
-      //    need special thing here; this will also run b4 a.secondPass(e);
-      System.out.print("mips> ");
+      
+      System.out.print(CMD_PROMPT);
    }
 
    public void addInst(Inst inst) {
