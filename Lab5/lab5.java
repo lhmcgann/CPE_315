@@ -22,7 +22,7 @@ public class lab5 {
       asmReader.readThroughLines(); // first pass to build symbol table
 
       // emulator needed for second pass of Assembler and for script reading
-      Emulator e = new Emulator();
+      Emulator e = new Emulator(getGHRSize(args));
 
       a.secondPass(e); // store processed lines at line nums; compute labelAdrs
       asmReader.terminate();
@@ -46,11 +46,13 @@ public class lab5 {
       scriptReader.terminate();
    }
 
-   public static boolean validArgs(String[] args) {
-      return args.length == 1 || args.length == 2;
+   private static boolean validArgs(String[] args) {
+      // correct w/ or w/o GHR size; for turning in, guaranteed to have script
+      // return args.length == 3 || args.length == 2;
+      return args.length > 1 && args.length < 4;
    }
 
-   public static FileInputStream openStream(String filename) {
+   private static FileInputStream openStream(String filename) {
       try {
          return new FileInputStream(filename);
       }
@@ -59,6 +61,12 @@ public class lab5 {
          System.exit(1);
       }
       return null;
+   }
+
+   private static int getGHRSize(String[] args) {
+      if (args.length == 3)
+         return Integer.parseInt(args[2]); // GHR size is last of 3 args
+      return 2; // default GHR size
    }
 
 }
