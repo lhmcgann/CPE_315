@@ -22,8 +22,10 @@ public class Emulator {
    public Map<Integer, Integer> RF;
    public int[] DM;
    private ArrayList<Inst> IM;
-   private char[] ghr;
-   private char[] predArray;
+   private char ghrSize;
+   private char ghr; // char bc will only ever be 8-bits
+   private int ghrMask;
+   private char[] predArray; // array of predictions
 
    public Emulator(char ghrSize) {
       PC = 0;
@@ -58,9 +60,18 @@ public class Emulator {
             put(29, 0);
             put(31, 0);
          }};
-      DM = new int[DM_LEN];
+      DM = new int[DM_LEN]; // fill DM with 0's
+      for (int i = 0; i < DM.length; i++)
+         DM[i] = 0;
       IM = new ArrayList<Inst>();
-      ghr = new char[ghrSize];
+
+      // ghr setup
+      this.ghrSize = ghrSize;
+      ghrMask = ghrSize + (ghrSize - 1); // to fill up to ghrSize-bit with 1's
+      ghr = 0;
+      predArray = new char[(int)Math.pow(2, ghrSize)]; // fill predArray with 0's
+      for (int i = 0; i < predArray.length; i++)
+         predArray[i] = 0;
 
       System.out.print(CMD_PROMPT);
    }
@@ -186,6 +197,11 @@ public class Emulator {
       // reset Data Mem
       for (int i = 0; i < DM_LEN; i++)
          DM[i] = 0;
+
+      // reset ghr stuff
+      ghr = 0;
+      for (int i = 0; i < predArray.length; i++)
+         predArray[i] = 0;
 
       System.out.println("\tSimulator reset");
    }
