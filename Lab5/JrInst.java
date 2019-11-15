@@ -21,7 +21,7 @@ public class JrInst extends RInst {
    }
 
    @Override
-   public void execute(Emulator e) {
+   public void emulate(Emulator e) {
       e.PC = e.RF.get(rs);
    }
 

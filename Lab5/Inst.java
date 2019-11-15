@@ -31,7 +31,7 @@ public abstract class Inst {
       computeArgs(line);
    }
 
-   public abstract void execute(Emulator e);
+   public abstract void emulate(Emulator e);
 
    protected abstract boolean validRegs(String[] line);
    protected abstract void computeArgs(String[] line);

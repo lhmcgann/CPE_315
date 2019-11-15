@@ -8,7 +8,7 @@ public class BeqInst extends BInst {
    }
 
    protected boolean shouldBranch(Emulator e) {
-      return e.RF.get(rs) != e.RF.get(rt);
+      return e.RF.get(rs) == e.RF.get(rt);
    }
 
 }

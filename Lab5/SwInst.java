@@ -8,7 +8,7 @@ public class SwInst extends LSInst {
    }
 
    @Override
-   public void execute(Emulator e) {
+   public void emulate(Emulator e) {
       // put rt -> M[rs+imd]
       e.DM[e.RF.get(rs) + imd] = e.RF.get(rt);
    }

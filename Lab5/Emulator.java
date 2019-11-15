@@ -57,9 +57,7 @@ public class Emulator {
       DM = new int[DM_LEN];
       IM = new ArrayList<Inst>();
 
-      // TODO: fix this! when to print this? edit actual execute fnxn so don't
-      //    need special thing here; this will also run b4 a.secondPass(e);
-      System.out.print("mips> ");
+      System.out.print(CMD_PROMPT);
    }
 
    public void addInst(Inst inst) {
@@ -67,11 +65,11 @@ public class Emulator {
    }
 
    /**
-   * Execute the next instruction, THEN increment the PC.
+   * Increment the PC, THEN emulate the next instruction.
    */
-   private void executeInstruction() {
+   private void emulateInstruction() {
       PC++; // increment PC first so any cmds that modify PC aren't affected
-      IM.get(PC-1).execute(this);
+      IM.get(PC-1).emulate(this);
    }
 
    /**
@@ -149,8 +147,8 @@ public class Emulator {
    */
    private void s(int arg) {
       for (int i = 0; i < arg; i++)
-         executeInstruction();
-      System.out.println("\t" + arg + " instruction(s) executed");
+         emulateInstruction();
+      System.out.println("\t" + arg + " instruction(s) emulated");
    }
 
    /**
@@ -158,7 +156,7 @@ public class Emulator {
    */
    private void r() {
       while(PC < IM.size())
-         executeInstruction(); // increments PC
+         emulateInstruction(); // increments PC
    }
 
    /**

@@ -8,7 +8,7 @@ public class AddiInst extends IInst {
    }
 
    @Override
-   public void execute(Emulator e) {
+   public void emulate(Emulator e) {
       e.RF.put(rt, e.RF.get(rs) + imd);
    }
 
