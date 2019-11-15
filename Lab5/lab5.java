@@ -63,9 +63,9 @@ public class lab5 {
       return null;
    }
 
-   private static int getGHRSize(String[] args) {
+   private static char getGHRSize(String[] args) {
       if (args.length == 3)
-         return Integer.parseInt(args[2]); // GHR size is last of 3 args
+         return (char) Integer.parseInt(args[2]); // GHR size is last of 3 args
       return 2; // default GHR size
    }
 

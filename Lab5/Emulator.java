@@ -22,9 +22,10 @@ public class Emulator {
    public Map<Integer, Integer> RF;
    public int[] DM;
    private ArrayList<Inst> IM;
-   private int[] ghr;
+   private char[] ghr;
+   private char[] predArray;
 
-   public Emulator(int ghrSize) {
+   public Emulator(char ghrSize) {
       PC = 0;
       // maps number representations of all supported registers to reg's value
       RF = new HashMap<Integer,
@@ -59,7 +60,7 @@ public class Emulator {
          }};
       DM = new int[DM_LEN];
       IM = new ArrayList<Inst>();
-      ghr = new int[ghrSize];
+      ghr = new char[ghrSize];
 
       System.out.print(CMD_PROMPT);
    }
