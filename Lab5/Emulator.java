@@ -9,7 +9,9 @@ public class Emulator {
    private final String HELP = "\nh = show help\nd = dump register state\n" +
       "s = single step through the program (i.e. execute 1 instruction and stop)"
       + "\ns num = step through num instructions of the program"
-      + "\nr = run until the program ends"
+      + "\nr = run until the program ends\n" +
+      "o = output a comma separated listing of the x,y coordinates to a file called coordinates.csv"
+      + "\nb = output the branch predictor accuracy"
       + "\nm num1 num2 = display data memory from location num1 to num2"
       + "\nc = clear all registers, memory, and the program counter to 0"
       + "\nq = exit the program";
