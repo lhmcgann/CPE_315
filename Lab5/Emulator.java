@@ -25,10 +25,16 @@ public class Emulator {
    private char ghrSize;
    private char ghr; // char bc will only ever be 8-bits
    private int ghrMask;
-   private char[] predArray; // array of predictions
+   private char[] predArray; // array of 2-bit predictions
+   private final char T = 3;
+   private final char NT = 0;
+   private final char WT = 2;
+   private final char WNT = 1;
+   private int numBrs;
+   private int correctBrs;
 
    public Emulator(char ghrSize) {
-      PC = 0;
+      PC = numBrs = correctBrs = 0;
       // maps number representations of all supported registers to reg's value
       RF = new HashMap<Integer,
          Integer>() {{
@@ -89,6 +95,47 @@ public class Emulator {
    }
 
    /**
+   * Use to determine with path to take before know actual br result (for CPU sim).
+   * @return - a boolean indicating if predicted taken (true) or not taken (false)
+   */
+   private boolean getBrPred() {
+      char val = predArray[getPredIndex()];
+      return val > WNT; // if >1 (true), WT or ST. if <=1 (false), SNT or WNT.
+   }
+
+   /**
+   * ALWAYS use thi method instead of using the ghr to index directly into the
+   *  prediction array.
+   * @return - the index to use into the prediciton array
+   */
+   private char getPredIndex() {
+      return (char) (ghr & ghrMask); // so ignores shifted bits if size < 8
+   }
+
+   public void adjustPred(boolean taken) {
+      char nextVal;
+      // update the prediction in the predArray at the old ghr spot
+      if (taken) {
+         predArray[getPredIndex()] = (char) Math.min(predArray[getPredIndex()]+1, T);
+         nextVal = T;
+      }
+      else {
+         predArray[getPredIndex()] = (char) Math.max(predArray[getPredIndex()]-1, NT);
+         nextVal = NT;
+      }
+      // predArray[getPredIndex()] += Math.signum(realVal - predArray[getPredIndex()]);
+
+      // shift ghr and add the T/NT value of the most recent branch
+      ghr = (char) (ghr << 1);
+      ghr += nextVal;
+
+      // update counts for br accuracy
+      numBrs++; // increment regardless of outcome
+      if (getBrPred() && taken || ((getBrPred() == false) && (taken == false)))
+         correctBrs++; // incr if matching T-T or NT-NT
+   }
+
+   /**
    * @param cmd - the script cmd to execute
    * @param args - a 2-int long array containing any cmd arguments; filled with
    *  -1's if no cmd args
@@ -109,6 +156,12 @@ public class Emulator {
             break;
          case "r": // run until prog end
             r();
+            break;
+         case "b": // output br predictor accuracy
+            b();
+            break;
+         case "o": // output to coordinates.csv
+            o();
             break;
          case "m": // display data mem from n1 to n2
             m(args);
@@ -176,6 +229,19 @@ public class Emulator {
    }
 
    /**
+   * Output the branch accuracy.
+   */
+   private void b() {
+      double accuracy = ((float) correctBrs) / numBrs * 100;
+      System.out.printf("\naccuracy %.2f%% (%d correct predictions, %d predictions)\n",
+         accuracy, correctBrs, numBrs);
+   }
+
+   private void o() {
+
+   }
+
+   /**
    * Display data mem from addresses args[0] to args[1].
    * @param args - the bounds of the range of mem addresses to print; must be
    *  valid mem addresses; args must be of length 2
@@ -190,7 +256,7 @@ public class Emulator {
    * Clear all.
    */
    private void c() {
-      PC = 0;
+      PC = numBrs = correctBrs = 0;
       // reset all regs in Reg File
       for (Integer key : RF.keySet())
          RF.put(key, 0);
