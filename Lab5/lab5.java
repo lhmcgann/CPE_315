@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 
 public class lab5 {
 
-   public static boolean DEBUG = false;
+   public static boolean DEBUG = true;
 
    public static void main(String[] args) {
 
@@ -22,7 +22,7 @@ public class lab5 {
       asmReader.readThroughLines(); // first pass to build symbol table
 
       // emulator needed for second pass of Assembler and for script reading
-      char ghrSize = getGHRSize(args);
+      int ghrSize = getGHRSize(args);
       if (DEBUG)
          System.out.println(ghrSize);
       Emulator e = new Emulator(ghrSize);
@@ -70,9 +70,20 @@ public class lab5 {
       return args[1].contains(".script");
    }
 
-   private static char getGHRSize(String[] args) {
-      if (args.length == 3)
-         return (char) Integer.parseInt(args[2]); // GHR size is last of 3 args
+   private static int getGHRSize(String[] args) {
+      // no script yes ghrSize (len == 2) --> look at args[len-1]
+      // no script no ghr (len == 1) --> 2
+      // yes script yes ghr (len == 3) --> look at args[len-1]
+      // yes script no ghrSize (len == 2) --> 2
+      if (!isScript(args)) {
+         if (args.length == 2)
+            return  Integer.parseInt(args[args.length - 1]);
+         else
+            return 2;
+      }
+      // if is script and is given ghr size, look at 3rd
+      else if (args.length == 3)
+         return  Integer.parseInt(args[args.length - 1]); // GHR size is last of 3 args
       return 2; // default GHR size
    }
 

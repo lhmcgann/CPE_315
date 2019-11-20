@@ -22,18 +22,18 @@ public class Emulator {
    public Map<Integer, Integer> RF;
    public int[] DM;
    private ArrayList<Inst> IM;
-   private char ghrSize;
-   private char ghr; // char bc will only ever be 8-bits
-   private int ghrMask;
-   private char[] predArray; // array of 2-bit predictions
-   private final char T = 3;
-   private final char NT = 0;
-   private final char WT = 2;
-   private final char WNT = 1;
+   private int ghrSize;
+   private int ghr; // int bc will only ever be 8-bits
+   private int ghrMask; //TODO: however I'm masking to get pred index from ghr, only getting first 3 bits
+   private int[] predArray; // array of 2-bit predictions
+   private final int T = 3;
+   private final int NT = 0;
+   private final int WT = 2;
+   private final int WNT = 1;
    private int numBrs;
    private int correctBrs;
 
-   public Emulator(char ghrSize) {
+   public Emulator(int ghrSize) {
       PC = numBrs = correctBrs = 0;
       // maps number representations of all supported registers to reg's value
       RF = new HashMap<Integer,
@@ -73,9 +73,12 @@ public class Emulator {
 
       // ghr setup
       this.ghrSize = ghrSize;
-      ghrMask = ghrSize + (ghrSize - 1); // to fill up to ghrSize-bit with 1's
+      ghrMask = ghrSize << 1;
+      ghrMask += ghrMask - 1; // to fill up to ghrSize-bit with 1's
+      if (lab5.DEBUG)
+         System.out.println("mask = " + Integer.toBinaryString(ghrMask));
       ghr = 0;
-      predArray = new char[(int)Math.pow(2, ghrSize)]; // fill predArray with 0's
+      predArray = new int[(int)Math.pow(2, ghrSize)]; // fill predArray with 0's
       for (int i = 0; i < predArray.length; i++)
          predArray[i] = 0;
 
@@ -99,7 +102,7 @@ public class Emulator {
    * @return - a boolean indicating if predicted taken (true) or not taken (false)
    */
    private boolean takeBranch() {
-      char val = predArray[getPredIndex()];
+      int val = predArray[getPredIndex()];
       return val > WNT; // if >1 (true), WT or ST. if <=1 (false), SNT or WNT.
    }
 
@@ -108,13 +111,13 @@ public class Emulator {
    *  prediction array.
    * @return - the index to use into the prediciton array
    */
-   private char getPredIndex() {
-      return (char) (ghr & ghrMask); // so ignores shifted bits if size < 8
+   private int getPredIndex() {
+      return  (ghr & ghrMask); // so ignores shifted bits if size < 8
    }
 
    public void adjustPred(boolean taken) {
-      char nextVal;
-      char i = getPredIndex();
+      int nextVal;
+      int i = getPredIndex();
 
       if (lab5.DEBUG) {
          System.out.println("pred index = " + Integer.toBinaryString(i));
@@ -123,11 +126,11 @@ public class Emulator {
 
       // update the prediction in the predArray at the old ghr spot
       if (taken) {
-         predArray[i] = (char) Math.min(predArray[i]+1, T);
+         predArray[i] =  Math.min(predArray[i]+1, T);
          nextVal = 1; // ghr gets a 1 if taken
       }
       else {
-         predArray[i] = (char) Math.max(predArray[i]-1, NT);
+         predArray[i] =  Math.max(predArray[i]-1, NT);
          nextVal = 0; // ghr gets a 0 if NOT taken
       }
       // predArray[getPredIndex()] += Math.signum(realVal - predArray[getPredIndex()]);
@@ -135,7 +138,7 @@ public class Emulator {
       // shift ghr and add the T/NT value of the most recent branch
       if (lab5.DEBUG)
          System.out.println("ghr = " + Integer.toBinaryString(ghr));
-      ghr = (char) (ghr << 1);
+      ghr =  (ghr << 1);
       if (lab5.DEBUG)
          System.out.println("ghr = " + Integer.toBinaryString(ghr));
       ghr += nextVal;

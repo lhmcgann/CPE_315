@@ -59,7 +59,7 @@ public class AsmReader extends Reader {
    * Identifies the instruction string.
    * Spaces the instruction itself and all of its aguments by nothing more than a ','
    * Included here in order to have all String manipulation in this class.
-   * @param line - the initial instruction line; first char is first char of
+   * @param line - the initial instruction line; first int is first int of
    *  the instruction; no comments after the assembly code
    * @return - a String array of the inst itself followed by its arguments
    */
