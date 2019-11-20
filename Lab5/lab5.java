@@ -22,23 +22,26 @@ public class lab5 {
       asmReader.readThroughLines(); // first pass to build symbol table
 
       // emulator needed for second pass of Assembler and for script reading
-      Emulator e = new Emulator(getGHRSize(args));
+      char ghrSize = getGHRSize(args);
+      if (DEBUG)
+         System.out.println(ghrSize);
+      Emulator e = new Emulator(ghrSize);
 
       a.secondPass(e); // store processed lines at line nums; compute labelAdrs
       asmReader.terminate();
 
       // set up script reader: script file if given, else user input
       InputStream script;
-      boolean isScript;
-      if (args.length == 2) {
-         script = openStream(args[1]);
-         isScript = true;
-      }
-      else {
-         script = System.in;
-         isScript = false;
-      }
-      ScriptReader scriptReader = new ScriptReader(script, e, isScript);
+      boolean isScript = isScript(args);
+      script = ((isScript) ? openStream(args[1]) : System.in);
+      //    script = openStream(args[1]);
+      //    isScript = true;
+      // }
+      // else {
+      //
+      //    isScript = false;
+      // }
+      ScriptReader scriptReader = new ScriptReader(script, e, isScript); // isScript
 
       // actually execute all the cmds in the script (or user input)
       scriptReader.readThroughLines(); // won't end until q() exits
@@ -61,6 +64,10 @@ public class lab5 {
          System.exit(1);
       }
       return null;
+   }
+
+   private static boolean isScript(String[] args) {
+      return args[1].contains(".script");
    }
 
    private static char getGHRSize(String[] args) {

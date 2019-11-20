@@ -95,10 +95,10 @@ public class Emulator {
    }
 
    /**
-   * Use to determine with path to take before know actual br result (for CPU sim).
+   * Use to determine which path to take before know actual br result (for CPU sim).
    * @return - a boolean indicating if predicted taken (true) or not taken (false)
    */
-   private boolean getBrPred() {
+   private boolean takeBranch() {
       char val = predArray[getPredIndex()];
       return val > WNT; // if >1 (true), WT or ST. if <=1 (false), SNT or WNT.
    }
@@ -114,25 +114,41 @@ public class Emulator {
 
    public void adjustPred(boolean taken) {
       char nextVal;
+      char i = getPredIndex();
+
+      if (lab5.DEBUG) {
+         System.out.println("pred index = " + Integer.toBinaryString(i));
+         System.out.println("pred = " + Integer.toBinaryString(predArray[i]));
+      }
+
       // update the prediction in the predArray at the old ghr spot
       if (taken) {
-         predArray[getPredIndex()] = (char) Math.min(predArray[getPredIndex()]+1, T);
-         nextVal = T;
+         predArray[i] = (char) Math.min(predArray[i]+1, T);
+         nextVal = 1; // ghr gets a 1 if taken
       }
       else {
-         predArray[getPredIndex()] = (char) Math.max(predArray[getPredIndex()]-1, NT);
-         nextVal = NT;
+         predArray[i] = (char) Math.max(predArray[i]-1, NT);
+         nextVal = 0; // ghr gets a 0 if NOT taken
       }
       // predArray[getPredIndex()] += Math.signum(realVal - predArray[getPredIndex()]);
 
       // shift ghr and add the T/NT value of the most recent branch
+      if (lab5.DEBUG)
+         System.out.println("ghr = " + Integer.toBinaryString(ghr));
       ghr = (char) (ghr << 1);
+      if (lab5.DEBUG)
+         System.out.println("ghr = " + Integer.toBinaryString(ghr));
       ghr += nextVal;
+      if (lab5.DEBUG)
+         System.out.println("ghr = " + Integer.toBinaryString(ghr));
 
       // update counts for br accuracy
       numBrs++; // increment regardless of outcome
-      if (getBrPred() && taken || ((getBrPred() == false) && (taken == false)))
+      if ((takeBranch() && taken) || (!takeBranch() && !taken)) {
          correctBrs++; // incr if matching T-T or NT-NT
+         if (lab5.DEBUG)
+            System.out.println("correct Brs = " + correctBrs);
+      }
    }
 
    /**
