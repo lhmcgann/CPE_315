@@ -51,8 +51,9 @@ public class lab5 {
 
    private static boolean validArgs(String[] args) {
       // correct w/ or w/o GHR size; for turning in, guaranteed to have script
-      // return args.length == 3 || args.length == 2;
-      return args.length > 1 && args.length < 4;
+      // return args.length == 3 || args.length == 2 || args.length == 1;
+      // 3 (script and size) or 2 (script or size) or 1 (neither script or size)
+      return args.length > 0 && args.length < 4;
    }
 
    private static FileInputStream openStream(String filename) {
@@ -67,7 +68,7 @@ public class lab5 {
    }
 
    private static boolean isScript(String[] args) {
-      return args[1].contains(".script");
+      return args.length > 1 && args[1].contains(".script");
    }
 
    private static int getGHRSize(String[] args) {
