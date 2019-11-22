@@ -73,8 +73,12 @@ public class Emulator {
 
       // ghr setup
       this.ghrSize = ghrSize;
-      ghrMask = ghrSize << 1;
-      ghrMask += ghrMask - 1; // to fill up to ghrSize-bit with 1's
+      // set ghrMask to ghrSize number of 1's
+      ghrMask = 0;
+      for (int i = 0; i < ghrSize; i++) {
+         ghrMask <<= 1;
+         ghrMask += 1;
+      }
       if (lab5.DEBUG)
          System.out.println("mask = " + Integer.toBinaryString(ghrMask));
       ghr = 0;
@@ -112,7 +116,7 @@ public class Emulator {
    * @return - the index to use into the prediciton array
    */
    private int getPredIndex() {
-      return  (ghr & ghrMask); // so ignores shifted bits if size < 8
+      return  (ghr & ghrMask); // so ignores shifted bits outside of the size
    }
 
    public void adjustPred(boolean taken) {
@@ -135,12 +139,14 @@ public class Emulator {
       }
       // predArray[getPredIndex()] += Math.signum(realVal - predArray[getPredIndex()]);
 
+      if (lab5.DEBUG) {
+         System.out.println("pred (new) = " + Integer.toBinaryString(predArray[i]));
+      }
+
       // shift ghr and add the T/NT value of the most recent branch
       if (lab5.DEBUG)
          System.out.println("ghr = " + Integer.toBinaryString(ghr));
       ghr =  (ghr << 1);
-      if (lab5.DEBUG)
-         System.out.println("ghr = " + Integer.toBinaryString(ghr));
       ghr += nextVal;
       if (lab5.DEBUG)
          System.out.println("ghr = " + Integer.toBinaryString(ghr));
