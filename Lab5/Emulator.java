@@ -120,6 +120,14 @@ public class Emulator {
    }
 
    public void adjustPred(boolean taken) {
+      // update counts for br accuracy; DO THIS BEFORE MESS WITH GHR!!!
+      numBrs++; // increment regardless of outcome
+      if ((takeBranch() && taken) || (!takeBranch() && !taken)) {
+         correctBrs++; // incr if matching T-T or NT-NT
+         if (lab5.DEBUG)
+            System.out.println("correct Brs = " + correctBrs);
+      }
+
       int nextVal;
       int i = getPredIndex();
 
@@ -151,13 +159,6 @@ public class Emulator {
       if (lab5.DEBUG)
          System.out.println("ghr = " + Integer.toBinaryString(ghr));
 
-      // update counts for br accuracy
-      numBrs++; // increment regardless of outcome
-      if ((takeBranch() && taken) || (!takeBranch() && !taken)) {
-         correctBrs++; // incr if matching T-T or NT-NT
-         if (lab5.DEBUG)
-            System.out.println("correct Brs = " + correctBrs);
-      }
    }
 
    /**
