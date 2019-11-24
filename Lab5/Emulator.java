@@ -20,7 +20,7 @@ public class Emulator {
       + "\nq = exit the program";
    private final String CMD_PROMPT = "\nmips> ";
    private final int REGS_PER_LINE = 4;
-   private final int DM_LEN = 8192;
+   public final int DM_LEN = 8192;
    public int PC;
    public Map<Integer, Integer> RF;
    public int[] DM;

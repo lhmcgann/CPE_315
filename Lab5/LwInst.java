@@ -10,7 +10,7 @@ public class LwInst extends LSInst {
    @Override
    public void emulate(Emulator e) {
       // put M[rs+imd] -> rt
-      e.RF.put(rt, e.DM[e.RF.get(rs) + imd]);
+      e.RF.put(rt, e.DM[getMemAdr(e));
    }
 
 }

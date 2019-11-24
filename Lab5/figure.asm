@@ -65,9 +65,9 @@ main:
 
 
 plot: # store x ($a0) and y ($a1) in data memory, y after x
-   addi $sp, $sp, 8  # TODO: check if +- sp first... need to save and restore too? -> shouldn't bc want sp to stay changed
-   sw $a0, 0($sp)    # store x
-   sw $a1, -4($sp)   # store y
+   addi $sp, $sp, 8        # TODO: check if +- sp first...
+   sw $a0, -4($sp)         # store x (lower mem)
+   sw $a1, 0($sp)          # store y (higher mem)
    jr $ra
 
 swap: # swap two values; a0 -> a1, a1 -> a0
@@ -150,27 +150,24 @@ skip2: # delta stuff
    addi $t2, $0, -1        # set YSTEP ($t2) to -1 if not y0 < y1
 
 skip3: add $t3, $s0, $0    # X = x0 -> DON'T OVERWRITE
-   addi $t4, $s2, 1        # UPPER BOUND for loop (up to x1 inclusive -> < x1+1)
-loop: slt $t5, $t3, $t4    # check loop condition: x <= x1  -->  x < x1+1
-   beq $t5, $0, done
+loop: slt $t5, $t3, $t4    # check loop condition: (x <= x1)  -->  !(x > x1) --> !(x1 < x)
+   bne $t5, $0, done       # checked (x1 < x); keep looping if !(x1 < x), i.e. $t5 = 0; done if true, i.e. $t5 == 1 != 0
 
    # if st == 1 {plot(y,x); else plot(x,y);}
-   addi $t5, $s4, -1       # $t5 should be 0 if st == 1
-   bne $t5, $0, not1
+   beq $s4, $0, not1       # only 2 options for st: 0, 1; so if 0, then !=1 -> skip ==1 stuff
    add $a0, $t1, $0        # put Y in $a0
    add $a1, $t3, $0        # put X in $a1
    jal plot                # plot (y,x)
-   j next
+   j next                  # so don't plot st==1 stuff too
 not1: add $a0, $t3, $0     # put X in $a0
    add $a1, $t1, $0        # put Y in $a1
    jal plot                # plot (x,y)
 
 next: add $t0, $t0, $s6    # error = error + deltay
-   # if deltax < 2*error + 1 (+1 so can use < and not <=)
+   # if (deltax <= 2*error)  -->  !(deltax > 2*error)  -->  !(2*error < deltax)
    add $t5, $t0, $t0       # error + error = 2*error
-   addi $t5, $0, 1         # $t5 = 2*error + 1
-   slt $t5, $s5, $t5
-   beq $t5, $0, loop       # if condition false, nothing left to do so loop back
+   slt $t5, $t5, $s5       # 2*err < dx?
+   bne $t5, $0, loop       # do next if NOT (2*err < dx), skip if true (==1) --> skip if !=0
    add $t1, $t1, $t2       # y += ystep
    sub $t0, $t0, $s5       # error -= deltax
    j loop
