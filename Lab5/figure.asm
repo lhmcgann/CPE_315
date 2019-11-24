@@ -2,72 +2,19 @@
 
 main:
    # Circle(30,100,20) #head
-	# Line(30,80,30,30) #body
    addi $a0, $0, 30
-   addi $a1, $0, 80
-   addi $a2, $0, 30
-   addi $a3, $0, 30
-   jal Line
-
-	# Line(20,1,30,30) #left leg
-   addi $a0, $0, 20
-   addi $a1, $0, 1
-   addi $a2, $0, 30
-   addi $a3, $0, 30
-   jal Line
-
-	# Line(40,1,30,30) #right leg
-   addi $a0, $0, 40
-   addi $a1, $0, 1
-   addi $a2, $0, 30
-   addi $a3, $0, 30
-   jal Line
-
-	# Line(15,60,30,50) #left arm
-   addi $a0, $0, 15
-   addi $a1, $0, 60
-   addi $a2, $0, 30
-   addi $a3, $0, 50
-   jal Line
-
-	# Line(30,50,45,60) #right arm
-   addi $a0, $0, 30
-   addi $a1, $0, 50
-   addi $a2, $0, 45
-   addi $a3, $0, 60
-   jal Line
-
-	# Circle(24,105,3) #left eye
-	# Circle(36,105,3) #right eye
-	# Line(25,90,35,90) #mouth center
-   addi $a0, $0, 25
-   addi $a1, $0, 90
-   addi $a2, $0, 35
-   addi $a3, $0, 50
-   jal Line
-
-	# Line(25,90,20,95) #mouth left
-   addi $a0, $0, 30
-   addi $a1, $0, 80
-   addi $a2, $0, 30
-   addi $a3, $0, 30
-   jal Line
-
-	# Line(35,90,40,95) #mouth right
-   addi $a0, $0, 30
-   addi $a1, $0, 80
-   addi $a2, $0, 30
-   addi $a3, $0, 30
-   jal Line
+   addi $a1, $0, 100
+   addi $a2, $0, 20
+   jal Circle
 
    j veryEnd               # we're done :)
 
 
 
 plot: # store x ($a0) and y ($a1) in data memory, y after x
-   addi $sp, $sp, 8        # TODO: check if +- sp first...
-   sw $a0, -4($sp)         # store x (lower mem)
-   sw $a1, 0($sp)          # store y (higher mem)
+   addi $sp, $sp, 2        # specific to Emulator: indices by 1, start at index 0, $sp is next EMPTY slot
+   sw $a0, -2($sp)         # store x (lower mem)
+   sw $a1, -1($sp)         # store y (higher mem)
    jr $ra
 
 swap: # swap two values; a0 -> a1, a1 -> a0
@@ -150,8 +97,8 @@ skip2: # delta stuff
    addi $t2, $0, -1        # set YSTEP ($t2) to -1 if not y0 < y1
 
 skip3: add $t3, $s0, $0    # X = x0 -> DON'T OVERWRITE
-loop: slt $t5, $t3, $t4    # check loop condition: (x <= x1)  -->  !(x > x1) --> !(x1 < x)
-   bne $t5, $0, done       # checked (x1 < x); keep looping if !(x1 < x), i.e. $t5 = 0; done if true, i.e. $t5 == 1 != 0
+lloop: slt $t5, $t3, $t4   # check loop condition: (x <= x1)  -->  !(x > x1) --> !(x1 < x)
+   bne $t5, $0, ldone      # checked (x1 < x); keep looping if !(x1 < x), i.e. $t5 = 0; done if true, i.e. $t5 == 1 != 0
 
    # if st == 1 {plot(y,x); else plot(x,y);}
    beq $s4, $0, not1       # only 2 options for st: 0, 1; so if 0, then !=1 -> skip ==1 stuff
@@ -167,17 +114,98 @@ next: add $t0, $t0, $s6    # error = error + deltay
    # if (deltax <= 2*error)  -->  !(deltax > 2*error)  -->  !(2*error < deltax)
    add $t5, $t0, $t0       # error + error = 2*error
    slt $t5, $t5, $s5       # 2*err < dx?
-   bne $t5, $0, loop       # do next if NOT (2*err < dx), skip if true (==1) --> skip if !=0
+   bne $t5, $0, lloop      # do next if NOT (2*err < dx), skip if true (==1) --> skip if !=0
    add $t1, $t1, $t2       # y += ystep
    sub $t0, $t0, $s5       # error -= deltax
-   j loop
+   j lloop
 
-done: add $ra, $s7, $0        # restore $ra
+ldone: add $ra, $s7, $0    # restore $ra
    jr $ra
 
 
 
-Circle:
+Circle: # xc = $a0 = $s0, yc = $a1 = $s1, r = $a2 = $s2
+   add $t9, $ra, $0        # save $ra
+   
+   # store all params in saved registers
+   add $s0, $a0, $0        # xc
+   add $s1, $a1, $0        # yc
+   add $s2, $a2, $0        # r
+
+   add $s3, $0, $0         # x = 0
+   add $s4, $s2, $0        # y = r
+
+   add $s5, $s2, $s2       # g = 3 - 2*r
+   sub $s5, $0, $s5
+   addi $s5, $s5, 3
+
+   add $s6, $s2, $s2       # diagInc = 10 - 4*r
+   add $s6, $s6, $s6
+   sub $s6, $0, $s6
+   addi $s6, $s6, 10
+
+   addi $s7, $0, 6         # rightInc = 6
+
+cloop: # while (x <= y)  -->  !(x > y)  -->  !(y < x)  -->  (y < x) == 0
+   slt $t0, $s4, $s3
+   bne $t0, $0, cdone
+
+   # 1) plot (xc+x, yc+y)
+   add $a0, $s0, $s3
+   add $a1, $s1, $s4
+   jal plot
+
+   # 2) plot (xc+x, yc-y)
+   add $a0, $s0, $s3
+   sub $a1, $s1, $s4
+   jal plot
+
+   # 3) plot (xc-x, yc+y)
+   sub $a0, $s0, $s3
+   add $a1, $s1, $s4
+   jal plot
+
+   # 4) plot (xc-x, yc-y)
+   sub $a0, $s0, $s3
+   sub $a1, $s1, $s4
+   jal plot
+
+   # 5) plot (xc+y, yc+x)
+   add $a0, $s0, $s4
+   add $a1, $s1, $s3
+   jal plot
+
+   # 6) plot (xc+y, yc-x)
+   add $a0, $s0, $s4
+   sub $a1, $s1, $s3
+   jal plot
+
+   # 7) plot (xc-y, yc+x)
+   sub $a0, $s0, $s4
+   add $a1, $s1, $s3
+   jal plot
+
+   # 8) plot (xc-y, yc-x)
+   sub $a0, $s0, $s4
+   sub $a1, $s1, $s3
+   jal plot
+
+   # if (g >= 0)  -->  !(g < 0)  -->  (g < 0) == 0
+   slt $t0, $s5, $0
+   bne $t0, $0, else
+   add $s5, $s5, $s6       # g += diagInc
+   addi $s6, $s6, 8        # diagInc += 8
+   addi $s4, $s4, -1       # y -= 1
+   j next1                 # so don't do else as well
+else: add $s5, $s5, $s7    # g += rightInc
+   addi $s6, $s6, 4        # diagInc += 4
+
+next1: addi $s7, $s7, 4        # rightInc += 4
+   addi $s3, $s3, 1        # x += 1
+
+   j cloop
+
+cdone: add $ra, $t9, $0    # restore $ra
    jr $ra
 
 

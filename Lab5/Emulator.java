@@ -100,6 +100,9 @@ public class Emulator {
    private void emulateInstruction() {
       PC++; // increment PC first so any cmds that modify PC aren't affected
       IM.get(PC-1).emulate(this);
+      // if (lab5.DEBUG) {
+      //    System.out.println("\tEmulated " + IM.get(PC-1).getInst());
+      // }
    }
 
    /**
