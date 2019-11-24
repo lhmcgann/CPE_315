@@ -19,9 +19,6 @@ public abstract class BInst extends IInst implements NeedsLabelAdr {
       e.adjustPred(taken);
       if (taken)
          e.PC = labelAdr;
-      
-      if (lab5.DEBUG)
-         System.out.println("Taken: " + taken);
    }
 
    /**

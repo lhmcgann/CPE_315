@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 
 public class lab5 {
 
-   public static boolean DEBUG = false;
+   public static boolean DEBUG = true;
 
    public static void main(String[] args) {
 
@@ -23,8 +23,6 @@ public class lab5 {
 
       // emulator needed for second pass of Assembler and for script reading
       int ghrSize = getGHRSize(args);
-      if (DEBUG)
-         System.out.println(ghrSize);
       Emulator e = new Emulator(ghrSize);
 
       a.secondPass(e); // store processed lines at line nums; compute labelAdrs
@@ -34,13 +32,6 @@ public class lab5 {
       InputStream script;
       boolean isScript = isScript(args);
       script = ((isScript) ? openStream(args[1]) : System.in);
-      //    script = openStream(args[1]);
-      //    isScript = true;
-      // }
-      // else {
-      //
-      //    isScript = false;
-      // }
       ScriptReader scriptReader = new ScriptReader(script, e, isScript); // isScript
 
       // actually execute all the cmds in the script (or user input)

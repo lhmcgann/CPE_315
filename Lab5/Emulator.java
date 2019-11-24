@@ -1,4 +1,7 @@
 import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
@@ -79,8 +82,6 @@ public class Emulator {
          ghrMask <<= 1;
          ghrMask += 1;
       }
-      if (lab5.DEBUG)
-         System.out.println("mask = " + Integer.toBinaryString(ghrMask));
       ghr = 0;
       predArray = new int[(int)Math.pow(2, ghrSize)]; // fill predArray with 0's
       for (int i = 0; i < predArray.length; i++)
@@ -124,18 +125,10 @@ public class Emulator {
       numBrs++; // increment regardless of outcome
       if ((takeBranch() && taken) || (!takeBranch() && !taken)) {
          correctBrs++; // incr if matching T-T or NT-NT
-         if (lab5.DEBUG)
-            System.out.println("correct Brs = " + correctBrs);
       }
 
       int nextVal;
       int i = getPredIndex();
-
-      if (lab5.DEBUG) {
-         System.out.println("pred index = " + Integer.toBinaryString(i));
-         System.out.println("pred = " + Integer.toBinaryString(predArray[i]));
-      }
-
       // update the prediction in the predArray at the old ghr spot
       if (taken) {
          predArray[i] =  Math.min(predArray[i]+1, T);
@@ -145,19 +138,10 @@ public class Emulator {
          predArray[i] =  Math.max(predArray[i]-1, NT);
          nextVal = 0; // ghr gets a 0 if NOT taken
       }
-      // predArray[getPredIndex()] += Math.signum(realVal - predArray[getPredIndex()]);
-
-      if (lab5.DEBUG) {
-         System.out.println("pred (new) = " + Integer.toBinaryString(predArray[i]));
-      }
 
       // shift ghr and add the T/NT value of the most recent branch
-      if (lab5.DEBUG)
-         System.out.println("ghr = " + Integer.toBinaryString(ghr));
       ghr =  (ghr << 1);
       ghr += nextVal;
-      if (lab5.DEBUG)
-         System.out.println("ghr = " + Integer.toBinaryString(ghr));
 
    }
 
@@ -219,9 +203,7 @@ public class Emulator {
    private void d() {
       System.out.println("\npc = " + PC); // print 1st buffer newline and the PC
       Object[] keys = Assembler.REGS.keySet().toArray();
-      if (lab5.DEBUG) {
-         System.out.println("old keys: " + Arrays.toString(keys));
-      }
+
       // skip the first reg str bc it's $zero
       for (int r = 1; r < keys.length; r++) {
          String reg = keys[r].toString();
@@ -263,8 +245,43 @@ public class Emulator {
          accuracy, correctBrs, numBrs);
    }
 
+   /**
+   * Output a comma separated listing of the x,y coordinates in DM to a file called coordinates.csv
+   */
    private void o() {
+      BufferedWriter writer;
+      try {
+         writer = new BufferedWriter(new FileWriter("coordinates.csv", true)); // TODO: check this
+      }
+      catch (IOException e) {
+         writer = null;
+         System.out.println("coord output file writer init error");
+         System.exit(1);
+      }
+      int i = 0;
+      int coord = DM[i]; // first x
+      while (coord != 0) {
+         String pair = Integer.toString(coord) + ",";
+         coord = DM[++i]; // first y
+         pair += Integer.toString(coord) + "\n";
+         // TODO: write to output file
+         try {
+            writer.write(pair);
+         }
+         catch (IOException e) {
+            System.out.println("coord output file write error");
+            System.exit(1);
+         }
+         coord = DM[++i]; // next x
+      }
 
+      try {
+         writer.close();
+      }
+      catch (IOException e) {
+         System.out.println("coord output file writer close error");
+         System.exit(1);
+      }
    }
 
    /**
