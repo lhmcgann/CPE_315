@@ -254,7 +254,7 @@ public class Emulator {
    private void o() {
       BufferedWriter writer;
       try {
-         writer = new BufferedWriter(new FileWriter("coordinates.csv", true)); // TODO: check this
+         writer = new BufferedWriter(new FileWriter("coordinates.csv", false));
       }
       catch (IOException e) {
          writer = null;
@@ -267,7 +267,6 @@ public class Emulator {
          String pair = Integer.toString(coord) + ",";
          coord = DM[++i]; // first y
          pair += Integer.toString(coord) + "\n";
-         // TODO: write to output file
          try {
             writer.write(pair);
          }

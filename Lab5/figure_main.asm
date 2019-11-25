@@ -1,4 +1,10 @@
 main:
+   # init $sp to highest data mem (actually the length of DM bc this $sp points to top of stack (i.e. item))
+   addi $sp, $0, 8192
+
+   # init pt plotter (i.e. index into DM for plotted pts)
+   add $t8, $0, $0
+
    # Circle(30,100,20) #head
    addi $a0, $0, 30
    addi $a1, $0, 100

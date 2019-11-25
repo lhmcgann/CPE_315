@@ -1,6 +1,12 @@
 # Draw a figure made of lines and circles using Bresenham drawing algorithms.
 
 main:
+   # init $sp to highest data mem (actually the length of DM bc this $sp points to top of stack (i.e. item))
+   addi $sp, $0, 8192
+
+   # init pt plotter (i.e. index into DM for plotted pts)
+   add $t8, $0, $0
+
    # Circle(30,100,20) #head
    addi $a0, $0, 30
    addi $a1, $0, 100
@@ -12,9 +18,9 @@ main:
 
 
 plot: # store x ($a0) and y ($a1) in data memory, y after x
-   addi $sp, $sp, 2        # specific to Emulator: indices by 1, start at index 0, $sp is next EMPTY slot
-   sw $a0, -2($sp)         # store x (lower mem)
-   sw $a1, -1($sp)         # store y (higher mem)
+   addi $t8, $t8, 2        # specific to Emulator: indices by 1, start at index 0, $t8 is next EMPTY slot
+   sw $a0, -2($t8)         # store x (lower mem)
+   sw $a1, -1($t8)         # store y (higher mem)
    jr $ra
 
 swap: # swap two values; a0 -> a1, a1 -> a0
@@ -126,7 +132,7 @@ ldone: add $ra, $s7, $0    # restore $ra
 
 Circle: # xc = $a0 = $s0, yc = $a1 = $s1, r = $a2 = $s2
    add $t9, $ra, $0        # save $ra
-   
+
    # store all params in saved registers
    add $s0, $a0, $0        # xc
    add $s1, $a1, $0        # yc
