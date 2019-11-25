@@ -62,21 +62,21 @@ main:
    addi $a0, $0, 25
    addi $a1, $0, 90
    addi $a2, $0, 35
-   addi $a3, $0, 50
+   addi $a3, $0, 90
    jal Line
 
 	# Line(25,90,20,95) #mouth left
-   addi $a0, $0, 30
-   addi $a1, $0, 80
-   addi $a2, $0, 30
-   addi $a3, $0, 30
+   addi $a0, $0, 25
+   addi $a1, $0, 90
+   addi $a2, $0, 20
+   addi $a3, $0, 95
    jal Line
 
 	# Line(35,90,40,95) #mouth right
-   addi $a0, $0, 30
-   addi $a1, $0, 80
-   addi $a2, $0, 30
-   addi $a3, $0, 30
+   addi $a0, $0, 35
+   addi $a1, $0, 90
+   addi $a2, $0, 40
+   addi $a3, $0, 95
    jal Line
 
    j veryEnd               # we're done :)
