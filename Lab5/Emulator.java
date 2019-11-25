@@ -217,7 +217,7 @@ public class Emulator {
          if (r%REGS_PER_LINE == 0)
             System.out.println();
          else
-            System.out.print("\t\t");
+            System.out.print("\t");
       }
       System.out.println(); // so there will be a new line under the table
    }

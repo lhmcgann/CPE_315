@@ -13,6 +13,74 @@ main:
    addi $a2, $0, 20
    jal Circle
 
+   # Line(30,80,30,30) #body
+   addi $a0, $0, 30
+   addi $a1, $0, 80
+   addi $a2, $0, 30
+   addi $a3, $0, 30
+   jal Line
+
+   # Line(20,1,30,30) #left leg
+   addi $a0, $0, 20
+   addi $a1, $0, 1
+   addi $a2, $0, 30
+   addi $a3, $0, 30
+   jal Line
+
+   # Line(40,1,30,30) #right leg
+   addi $a0, $0, 40
+   addi $a1, $0, 1
+   addi $a2, $0, 30
+   addi $a3, $0, 30
+   jal Line
+
+   # Line(15,60,30,50) #left arm
+   addi $a0, $0, 15
+   addi $a1, $0, 60
+   addi $a2, $0, 30
+   addi $a3, $0, 50
+   jal Line
+
+   # Line(30,50,45,60) #right arm
+   addi $a0, $0, 30
+   addi $a1, $0, 50
+   addi $a2, $0, 45
+   addi $a3, $0, 60
+   jal Line
+
+   # Circle(24,105,3) #left eye
+   addi $a0, $0, 24
+   addi $a1, $0, 105
+   addi $a2, $0, 3
+   jal Circle
+
+   # Circle(36,105,3) #right eye
+   addi $a0, $0, 36
+   addi $a1, $0, 105
+   addi $a2, $0, 3
+   jal Circle
+
+   # Line(25,90,35,90) #mouth center
+   addi $a0, $0, 25
+   addi $a1, $0, 90
+   addi $a2, $0, 35
+   addi $a3, $0, 50
+   jal Line
+
+   # Line(25,90,20,95) #mouth left
+   addi $a0, $0, 30
+   addi $a1, $0, 80
+   addi $a2, $0, 30
+   addi $a3, $0, 30
+   jal Line
+
+   # Line(35,90,40,95) #mouth right
+   addi $a0, $0, 30
+   addi $a1, $0, 80
+   addi $a2, $0, 30
+   addi $a3, $0, 30
+   jal Line
+
    j veryEnd               # we're done :)
 
 
@@ -21,12 +89,6 @@ plot: # store x ($a0) and y ($a1) in data memory, y after x
    addi $t8, $t8, 2        # specific to Emulator: indices by 1, start at index 0, $t8 is next EMPTY slot
    sw $a0, -2($t8)         # store x (lower mem)
    sw $a1, -1($t8)         # store y (higher mem)
-   jr $ra
-
-swap: # swap two values; a0 -> a1, a1 -> a0
-   addi $t0, $a0, 0
-   addi $a0, $a1, 0
-   addi $a1, $t0, 0
    jr $ra
 
 absDiff: # return (in $v0) the pos difference of two numbers (in $a0, $a1)
@@ -68,22 +130,22 @@ Line: # a0->s0 = x0, a1->s1 = y0, a2->s2 = x1, a3->s3 = y1
 
    # if st == 0 (i.e. != 1), skip, else (i.e. st == 1) 2 swaps
    beq $s4, $0, skip1
-   add $a0, $s0, $0        # load x0, y0 into 1st 2 arg regs
-   add $a1, $s1, $0
-   jal swap
-   add $a0, $s2, $0        # load x1, y1 into 1st 2 arg regs
-   add $a1, $s3, $0
-   jal swap
+   addi $t0, $s0, 0        # swap x0, y0
+   addi $s0, $s1, 0
+   addi $s1, $t0, 0
+   addi $t0, $s2, 0        # swap x1, y1
+   addi $s2, $s3, 0
+   addi $s3, $t0, 0
 
 # if x1 < x0, 2 swaps, else skip
 skip1: slt $t0, $s2, $s0   # if x1 >= x0 -> $t0 = 0
    beq $t0, $0, skip2      # if false ($t0 = 0), skip
-   add $a0, $s0, $0        # load x0, x1 into 1st 2 arg regs
-   add $a1, $s2, $0
-   jal swap
-   add $a0, $s1, $0        # load y0, y1 into 1st 2 arg regs
-   add $a1, $s3, $0
-   jal swap
+   addi $t0, $s0, 0        # swap x0, x1
+   addi $s0, $s2, 0
+   addi $s2, $t0, 0
+   addi $t0, $s1, 0        # swap y0, y1
+   addi $s1, $s3, 0
+   addi $s3, $t0, 0
 
 skip2: # delta stuff
    sub $s5, $s2, $s0       # DELTAX NOW IN $S5
@@ -103,7 +165,7 @@ skip2: # delta stuff
    addi $t2, $0, -1        # set YSTEP ($t2) to -1 if not y0 < y1
 
 skip3: add $t3, $s0, $0    # X = x0 -> DON'T OVERWRITE
-lloop: slt $t5, $t3, $t4   # check loop condition: (x <= x1)  -->  !(x > x1) --> !(x1 < x)
+lloop: slt $t5, $s2, $t3   # check loop condition: (x <= x1)  -->  !(x > x1) --> !(x1 < x)
    bne $t5, $0, ldone      # checked (x1 < x); keep looping if !(x1 < x), i.e. $t5 = 0; done if true, i.e. $t5 == 1 != 0
 
    # if st == 1 {plot(y,x); else plot(x,y);}
@@ -120,9 +182,11 @@ next: add $t0, $t0, $s6    # error = error + deltay
    # if (deltax <= 2*error)  -->  !(deltax > 2*error)  -->  !(2*error < deltax)
    add $t5, $t0, $t0       # error + error = 2*error
    slt $t5, $t5, $s5       # 2*err < dx?
-   bne $t5, $0, lloop      # do next if NOT (2*err < dx), skip if true (==1) --> skip if !=0
+   bne $t5, $0, skip4      # do next if NOT (2*err < dx), skip if true (==1) --> skip if !=0
    add $t1, $t1, $t2       # y += ystep
    sub $t0, $t0, $s5       # error -= deltax
+
+skip4: addi $t3, $t3, 1        # INCREMENT X!!!
    j lloop
 
 ldone: add $ra, $s7, $0    # restore $ra
