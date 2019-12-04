@@ -120,6 +120,7 @@ public class Emulator {
    * @return - the index to use into the prediciton array
    */
    private int getPredIndex() {
+      // would ghr % (int) Math.pow(2, ghrSize) work??? I was getting an index out of bounds error...
       return  (ghr & ghrMask); // so ignores shifted bits outside of the size
    }
 
